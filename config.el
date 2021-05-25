@@ -28,12 +28,17 @@
 (setq doom-theme 'doom-gruvbox)
 
 ;; set font
-(setq doom-font (font-spec :family "mononoki Nerd font" :size 30 ))
+(setq doom-font (font-spec :family "mononoki Nerd font" :size 35 )
+      doom-variable-pitch-font (font-spec :family "Source Code Pro" :size  35)
+      doom-big-font (font-spec :family "mononki Nerd font" :size 56))
 
 ;; Deft
-(setq deft-directory "~/org")
-(setq deft-extensions '("md" "org"))
-(setq deft-use-filename-as-title t)
+(setq deft-directory "~/org"
+ deft-extensions '("md" "org")
+ deft-use-filename-as-title t)
+
+;; Projectile
+(setq projectile-project-search-path '("~/code/" "~/go/src/github.com/utilitywarehouse/"))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -43,6 +48,9 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
+
+;; gpg config
+(setq epg-gpg-program "gpg")
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
@@ -59,3 +67,4 @@
 ;; This will open documentation for it, including demos of how they are used.
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
+
