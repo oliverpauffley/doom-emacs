@@ -48,9 +48,21 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
+;; Go settings
+(setq flycheck-golangci-lint-disable-all t
+      flycheck-golangci-lint-enable-linters '("vet" "vetshadow" "ineffassign" "deadcode" "gosimple" "goconst" "gofmt"))
 
-;; gpg config
-(setq epg-gpg-program "gpg")
+;; org-gcal storing secrets in gcal-secret.json
+(require 'json)
+(defun get-gcal-config-value (key)
+  "Return the value of the json secret for key"
+  (cdr (assoc key (json-read-file "~/.doom.d/gcal-secret.json"))))
+
+
+(setq org-gcal-client-id (get-gcal-config-value 'cliend-id)
+      org-gcal-client-secret (get-gcal-config-value 'client-secret)
+      org-gcal-fetch-file-alist '(("mrpauffley@gmail.com" .  "~/schedule.org")))
+
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
