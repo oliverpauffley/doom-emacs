@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: postgres properties drawer
+# group: database
+# key: psql
+# --
+:PROPERTIES:
+:header-args: :engine postgresql :dbhost ${1:localhost} :dbport ${2:5432} :dbuser ${3:postgres} :dbpassword ${4} :database ${5}
+:END:
