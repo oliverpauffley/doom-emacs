@@ -49,8 +49,13 @@
 (setq display-line-numbers-type t)
 
 ;; Go settings
-(setq flycheck-golangci-lint-disable-all t
-      flycheck-golangci-lint-enable-linters '("vet" "vetshadow" "ineffassign" "deadcode" "gosimple" "goconst" "gofmt"))
+(setq
+ gofmt-command "goimports"
+ flycheck-golangci-lint-disable-all t
+ flycheck-golangci-lint-enable-linters '("vet" "vetshadow" "ineffassign" "deadcode" "gosimple" "goconst" "gofmt"))
+
+;; Disable lsp formatting
+(setq-hook! 'go-mode-hook +format-with-lsp nil)
 
 ;; org-gcal storing secrets in gcal-secret.json
 (require 'json)
