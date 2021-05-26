@@ -34,8 +34,8 @@
 
 ;; Deft
 (setq deft-directory "~/org"
- deft-extensions '("md" "org")
- deft-use-filename-as-title t)
+      deft-extensions '("md" "org")
+      deft-use-filename-as-title t)
 
 ;; Projectile
 (setq projectile-project-search-path '("~/code/" "~/go/src/github.com/utilitywarehouse/"))
@@ -59,10 +59,43 @@
   (cdr (assoc key (json-read-file "~/.doom.d/gcal-secret.json"))))
 
 
-(setq org-gcal-client-id (get-gcal-config-value 'cliend-id)
+(setq org-gcal-client-id (get-gcal-config-value 'client-id)
       org-gcal-client-secret (get-gcal-config-value 'client-secret)
-      org-gcal-fetch-file-alist '(("mrpauffley@gmail.com" .  "~/schedule.org")))
+      org-gcal-fetch-file-alist '(("mrpauffley@gmail.com" .  "~/org/schedule.org")))
 
+(add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
+
+;; set org capture templates
+(after! org
+  (setq org-capture-templates
+        '(
+          ("t" "Personal todo" entry
+           (file+olp +org-capture-todo-file "Inbox" "Home")
+           "* [ ] %?\n%i\n%a" :prepend t)
+          ("w" "Work todo" entry
+           (file+olp +org-capture-todo-file "Inbox" "Work")
+           "* [ ] %?\n%i\n%a" :prepend t)
+          ("n" "Personal notes" entry
+           (file+headline +org-capture-notes-file "Inbox")
+           "* %u %?\n%i\n%a" :prepend t)
+          ("j" "Journal" entry
+           (file+olp+datetree +org-capture-journal-file)
+           "* %U %?\n%i\n%a" :prepend t)
+          ("p" "Templates for projects")
+          ("pt" "Project-local todo" entry
+           (file+headline +org-capture-project-todo-file "Inbox")
+           "* TODO %?\n%i\n%a" :prepend t)
+          ("pn" "Project-local notes" entry
+           (file+headline +org-capture-project-notes-file "Inbox")
+           "* %U %?\n%i\n%a" :prepend t)
+          ("pc" "Project-local changelog" entry
+           (file+headline +org-capture-project-changelog-file "Unreleased")
+           "* %U %?\n%i\n%a" :prepend t)
+          ("o" "Centralized templates for projects")
+          ("ot" "Project todo" entry #'+org-capture-central-project-todo-file "* TODO %?\n %i\n %a" :heading "Tasks" :prepend nil)
+          ("on" "Project notes" entry #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
+          ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t))))
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
@@ -79,4 +112,3 @@
 ;; This will open documentation for it, including demos of how they are used.
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
-
