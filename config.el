@@ -32,17 +32,19 @@
       doom-variable-pitch-font (font-spec :family "Source Code Pro" :size  35)
       doom-big-font (font-spec :family "mononki Nerd font" :size 56))
 
-;; Deft
-(setq deft-directory "~/org"
-      deft-extensions '("md" "org")
-      deft-use-filename-as-title t)
-
 ;; Projectile
 (setq projectile-project-search-path '("~/code/" "~/go/src/github.com/utilitywarehouse/"))
 
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+;; Kubernetes bindings
+(use-package kubernetes
+  :defer
+  :commands (kubernetes-overview))
+(use-package kubernetes-evil
+  :defer
+  :after kubernetes)
+(map! :leader
+      (:prefix "o"
+        :desc "Kubernetes" "K" 'kubernetes-overview))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -54,8 +56,14 @@
  flycheck-golangci-lint-disable-all t
  flycheck-golangci-lint-enable-linters '("vet" "vetshadow" "ineffassign" "deadcode" "gosimple" "goconst" "gofmt"))
 
-;; Disable lsp formatting
-(setq-hook! 'go-mode-hook +format-with-lsp nil)
+;; Deft
+(setq deft-directory "~/org"
+      deft-extensions '("md" "org")
+      deft-use-filename-as-title t)
+
+;; If you use `org' and don't want your org files in the default location below,
+;; change `org-directory'. It must be set before org loads!
+(setq org-directory "~/org/")
 
 ;; org-gcal storing secrets in gcal-secret.json
 (require 'json)
