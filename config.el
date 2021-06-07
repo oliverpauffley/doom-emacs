@@ -27,24 +27,30 @@
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-gruvbox)
 
+;; Modeline settings
+    (custom-set-faces!
+      '(mode-line :family "GohuFont Nerd Font")
+      '(mode-line-inactive :family "GohuFont Nerd Font"))
+(setq doom-modeline-modal-icon nil)
+
 ;; set font
 (setq doom-font (font-spec :family "mononoki Nerd font" :size 35 )
       doom-variable-pitch-font (font-spec :family "Source Code Pro" :size  35)
       doom-big-font (font-spec :family "mononki Nerd font" :size 56))
 
 ;; Projectile
-(setq projectile-project-search-path '("~/code/" "~/go/src/github.com/utilitywarehouse/"))
+(setq projectile-project-search-path '("~/code" "~/go/src/github.com/utilitywarehouse"))
 
 ;; Kubernetes bindings
 (use-package kubernetes
   :defer
-  :commands (kubernetes-overview))
-(use-package kubernetes-evil
+  :commands (kubel))
+(use-package kubel-evil
   :defer
-  :after kubernetes)
+  :after kubel)
 (map! :leader
       (:prefix "o"
-        :desc "Kubernetes" "K" 'kubernetes-overview))
+       :desc "Kubernetes" "K" 'kubel))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -54,7 +60,12 @@
 (setq
  gofmt-command "goimports"
  flycheck-golangci-lint-disable-all t
- flycheck-golangci-lint-enable-linters '("vet" "vetshadow" "ineffassign" "deadcode" "gosimple" "goconst" "gofmt"))
+ flycheck-golangci-lint-enable-linters '("vet" "vetshadow" "ineffassign" "deadcode" "gosimple" "goconst" "gofmt" "revive"))
+
+;; Rust Settings
+;;
+(after! rustic
+  (setq rustic-lsp-server 'rls))
 
 ;; Deft
 (setq deft-directory "~/org"
@@ -81,34 +92,64 @@
 
 ;; set org capture templates
 (after! org
-  (setq org-capture-templates
-        '(
-          ("t" "Personal todo" entry
-           (file+olp +org-capture-todo-file "Inbox" "Home")
-           "* [ ] %?\n%i\n%a" :prepend t)
-          ("w" "Work todo" entry
-           (file+olp +org-capture-todo-file "Inbox" "Work")
-           "* [ ] %?\n%i\n%a" :prepend t)
-          ("n" "Personal notes" entry
-           (file+headline +org-capture-notes-file "Inbox")
-           "* %u %?\n%i\n%a" :prepend t)
-          ("j" "Journal" entry
-           (file+olp+datetree +org-capture-journal-file)
-           "* %U %?\n%i\n%a" :prepend t)
-          ("p" "Templates for projects")
-          ("pt" "Project-local todo" entry
-           (file+headline +org-capture-project-todo-file "Inbox")
-           "* TODO %?\n%i\n%a" :prepend t)
-          ("pn" "Project-local notes" entry
-           (file+headline +org-capture-project-notes-file "Inbox")
-           "* %U %?\n%i\n%a" :prepend t)
-          ("pc" "Project-local changelog" entry
-           (file+headline +org-capture-project-changelog-file "Unreleased")
-           "* %U %?\n%i\n%a" :prepend t)
-          ("o" "Centralized templates for projects")
-          ("ot" "Project todo" entry #'+org-capture-central-project-todo-file "* TODO %?\n %i\n %a" :heading "Tasks" :prepend nil)
-          ("on" "Project notes" entry #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
-          ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t))))
+  ;; PlantUML settings
+  (setq
+   plantuml-jar-path (expand-file-name "/usr/share/java/plantuml/plantuml.jar")
+   org-plantuml-jar-path (expand-file-name "/usr/share/java/plantuml/plantuml.jar")
+   plantuml-default-exec-mode 'jar)
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
+  (setq
+   ;; Org Capture
+   org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(i)" "BLOCKED(b)" "|" "DONE(d)" "CANCELLED(c)"))
+   org-capture-templates
+   '(
+     ("a" "Appointment" entry
+      (file "~/org/schedule.org")
+      "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END\n\n")
+     ("t" "Personal todo" entry
+      (file+olp +org-capture-todo-file "Inbox" "Home")
+      "* [ ] %?\n%i\n%a" :prepend t)
+     ("w" "Work todo" entry
+      (file+olp +org-capture-todo-file "Inbox" "Work")
+      "* [ ] %?\n%i\n%a" :prepend t)
+     ("n" "Personal notes" entry
+      (file+headline +org-capture-notes-file "Inbox")
+      "* %u %?\n%i\n%a" :prepend t)
+     ("j" "Journal" entry
+      (file+olp+datetree +org-capture-journal-file)
+      "* %U %?\n%i\n%a" :prepend t)
+     ("p" "Templates for projects")
+     ("pt" "Project-local todo" entry
+      (file+headline +org-capture-project-todo-file "Inbox")
+      "* TODO %?\n%i\n%a" :prepend t)
+     ("pn" "Project-local notes" entry
+      (file+headline +org-capture-project-notes-file "Inbox")
+      "* %U %?\n%i\n%a" :prepend t)
+     ("pc" "Project-local changelog" entry
+      (file+headline +org-capture-project-changelog-file "Unreleased")
+      "* %U %?\n%i\n%a" :prepend t)
+     ("o" "Centralized templates for projects")
+     ("ot" "Project todo" entry #'+org-capture-central-project-todo-file "* TODO %?\n %i\n %a" :heading "Tasks" :prepend nil)
+     ("on" "Project notes" entry #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
+     ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t))))
+
+
+
+;; Emails
+(set-email-account! "mrpauffley@gmail.com"
+                    '((mu4e-sent-folder       . "/[Gmail].Sent Mail")
+                      (mu4e-drafts-folder     . "/drafts")
+                      (mu4e-trash-folder      . "/[Gmail].Bin")
+                      (mu4e-refile-folder     . "/[Gmail].All Mail")
+                      (smtpmail-smtp-user . "mrpauffley@gmail.com")
+                      (mu4e-compose-signature . "---\nOliver Pauffley"))t)
+;; tell message-mode how to send mail
+(setq message-send-mail-function 'smtpmail-send-it)
+;; if our mail server lives at smtp.example.org; if you have a local
+;; mail-server, simply use 'localhost' here.
+(setq smtpmail-smtp-server "smtp.gmail.com")
+
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
