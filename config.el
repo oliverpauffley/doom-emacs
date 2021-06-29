@@ -109,10 +109,10 @@
       "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END\n\n")
      ("t" "Personal todo" entry
       (file+olp +org-capture-todo-file "Inbox" "Home")
-      "* [ ] %?\n%i\n%a" :prepend t)
+      "* TODO %?\n%i\n%a" :prepend t)
      ("w" "Work todo" entry
       (file+olp +org-capture-todo-file "Inbox" "Work")
-      "* [ ] %?\n%i\n%a" :prepend t)
+      "* TODO %?\n%i\n%a" :prepend t)
      ("n" "Personal notes" entry
       (file+headline +org-capture-notes-file "Inbox")
       "* %u %?\n%i\n%a" :prepend t)

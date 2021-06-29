@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: altertable
+# key: <at
+# --
+ALTER TABLE ${2:table} ADD COLUMN ${1:column} ${0:type}

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: proximo url
+# key: <pu
+# --
+proximo://proximo:${1:6868}/${2:topic}?consumer-group=${3:consumer-group}&offset=${4:$$(yas-choose-value '("newest" "oldest"))}&insecure=${5:$$(yas-choose-value '("true" "false"))}
