@@ -82,6 +82,11 @@
   "Return the value of the json secret for key"
   (cdr (assoc key (json-read-file "~/.doom.d/gcal-secret.json"))))
 
+(add-hook! 'elfeed-search-mode-hook 'elfeed-update)
+(setq rmh-elfeed-org-files ' ("~/.doom.d/rss.org"))
+(map! :leader
+      (:prefix "o"
+       :desc "Elfeed" "E" 'elfeed))
 
 (setq org-gcal-client-id (get-gcal-config-value 'client-id)
       org-gcal-client-secret (get-gcal-config-value 'client-secret)
