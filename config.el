@@ -9,6 +9,11 @@
 (setq user-full-name "Oliver Pauffley"
       user-mail-address "mrpauffley@gmail.com")
 
+
+;; turn off tabs
+(setq-default indent-tabs-mode nil)
+
+
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;
@@ -35,11 +40,10 @@
 
 ;; set font
 (setq doom-font (font-spec :family "mononoki Nerd font" :size 35 )
-      doom-variable-pitch-font (font-spec :family "Source Code Pro" :size  35)
-      doom-big-font (font-spec :family "mononki Nerd font" :size 56))
+      doom-variable-pitch-font (font-spec :family "Source Code Pro" :size  35))
 
 ;; Projectile
-(setq projectile-project-search-path '("~/code" "~/go/src/github.com/utilitywarehouse"))
+(setq projectile-project-search-path '("~/code" "~/code/rust" "~/go/src/github.com/utilitywarehouse"))
 
 ;; Kubernetes bindings
 (use-package kubernetes
@@ -59,13 +63,24 @@
 ;; Go settings
 (setq
  gofmt-command "goimports"
+
  flycheck-golangci-lint-disable-all t
  flycheck-golangci-lint-enable-linters '("vet" "vetshadow" "ineffassign" "deadcode" "gosimple" "goconst" "gofmt" "revive"))
 
 ;; Rust Settings
 ;;
 (after! rustic
-  (setq rustic-lsp-server 'rls))
+  (setq rustic-lsp-server 'rust-analyzer))
+(add-to-list 'auto-mode-alist '("\\.ron\\'" . rustic-mode))
+
+(use-package! ron-mode
+  :defer t
+  :mode (("\\.ron\\'" . ron-mode)))
+
+;; Java
+;;
+(after! java-mode
+  (setq lsp-java-format-settings-url "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml"))
 
 ;; Deft
 (setq deft-directory "~/org"
@@ -101,7 +116,9 @@
   (setq
    plantuml-jar-path (expand-file-name "/usr/share/java/plantuml/plantuml.jar")
    org-plantuml-jar-path (expand-file-name "/usr/share/java/plantuml/plantuml.jar")
-   plantuml-default-exec-mode 'jar)
+   plantuml-default-exec-mode 'jar
+   org-columns-default-format "%50ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM"
+   )
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
   (setq

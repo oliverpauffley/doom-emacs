@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name:plantuml
+# key:<sp
+# --
+
+#+begin_src plantuml :file ${1:filename}
+# Create your diagram something like
+# rectangle thing
+# rectangle otherThing
+# thing -> otherThing
+$0
+#+end_src

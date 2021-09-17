@@ -53,7 +53,5 @@
 (package! go-impl)
 (package! kubel)
 (package! kubel-evil)
-(package! plantuml-mode)
-(package! flycheck-plantuml)
 (package! graphvis-dot-mode
   :recipe (:host github :repo "ppareit/graphviz-dot-mode"))
