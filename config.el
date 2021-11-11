@@ -9,12 +9,6 @@
 (setq user-full-name "Oliver Pauffley"
       user-mail-address "mrpauffley@gmail.com")
 
-;; autosave on focus loss
- (defun save-all ()
-    (interactive)
-    (save-some-buffers t))
-  (add-hook 'after-focus-change-function 'save-all)
-
 ;; turn off tabs
 (setq-default indent-tabs-mode nil)
 ;; set indents to 4
