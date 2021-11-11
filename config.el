@@ -9,10 +9,16 @@
 (setq user-full-name "Oliver Pauffley"
       user-mail-address "mrpauffley@gmail.com")
 
+;; autosave on focus loss
+ (defun save-all ()
+    (interactive)
+    (save-some-buffers t))
+  (add-hook 'after-focus-change-function 'save-all)
 
 ;; turn off tabs
 (setq-default indent-tabs-mode nil)
-
+;; set indents to 4
+(setq-default tab-width 4)
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
@@ -61,11 +67,8 @@
 (setq display-line-numbers-type t)
 
 ;; Go settings
-(setq
- gofmt-command "goimports"
+(setq gofmt-command "goimports")
 
- flycheck-golangci-lint-disable-all t
- flycheck-golangci-lint-enable-linters '("vet" "vetshadow" "ineffassign" "deadcode" "gosimple" "goconst" "gofmt" "revive"))
 
 ;; Rust Settings
 ;;
@@ -79,17 +82,19 @@
 
 ;; Java
 ;;
-(after! java-mode
-  (setq lsp-java-format-settings-url "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml"))
+(setq lsp-java-format-settings-url "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml")
 
-;; Deft
-(setq deft-directory "~/org"
-      deft-extensions '("md" "org")
-      deft-use-filename-as-title t)
+(setq org-format-latex-options
+   '(:foreground default :background default :scale 3 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
+     ("begin" "$1" "$" "$$" "\\(" "\\[")))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
+
+(map! :map cdlatex-mode-map
+      :i "TAB" #'cdlatex-tab)
+(add-hook 'latex-mode-hook 'turn-on-cdlatex)
 
 ;; org-gcal storing secrets in gcal-secret.json
 (require 'json)
@@ -120,7 +125,7 @@
    org-columns-default-format "%50ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM"
    )
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
+  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)(nix . t)))
   (setq
    ;; Org Capture
    org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(i)" "BLOCKED(b)" "|" "DONE(d)" "CANCELLED(c)"))

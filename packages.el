@@ -49,9 +49,19 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
+(package! smudge)
 (package! protobuf-mode)
 (package! go-impl)
 (package! kubel)
 (package! kubel-evil)
 (package! graphvis-dot-mode
   :recipe (:host github :repo "ppareit/graphviz-dot-mode"))
+(package! uuidgen
+  :recipe (:host github :repo "kanru/uuidgen-el"))
+(package! gitconfig-mode
+	  :recipe (:host github :repo "magit/git-modes"
+			 :files ("gitconfig-mode.el")))
+(package! gitignore-mode
+	  :recipe (:host github :repo "magit/git-modes"
+		   :files ("gitignore-mode.el")))
+(package! string-inflection)

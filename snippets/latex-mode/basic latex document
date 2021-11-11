@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+# name: basic latex document
+# key: basict
+# --
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,url,graphicx}
+
+\title{${2}}
+\author{${1:Oliver Pauffley}}
+
+\begin{document}
+\maketitle
+
+$0
+
+\end{document}
