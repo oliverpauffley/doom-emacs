@@ -45,6 +45,11 @@
 ;; Projectile
 (setq projectile-project-search-path '("~/code" "~/code/rust" "~/go/src/github.com/utilitywarehouse"))
 
+;; Magit
+(setq magit-repository-directories `(("~/code". 1)
+                                     ("~/go/src/github.com/utilitywarehouse" . 1)))
+
+
 ;; Kubernetes bindings
 (use-package kubernetes
   :defer
@@ -67,12 +72,44 @@
 ;; Rust Settings
 ;;
 (after! rustic
-  (setq rustic-lsp-server 'rust-analyzer))
-(add-to-list 'auto-mode-alist '("\\.ron\\'" . rustic-mode))
+  (setq rustic-lsp-server 'rust-analyzer
+  lsp-rust-analyzer-cargo-watch-command "clippy")
+  (add-to-list 'auto-mode-alist '("\\.ron\\'" . rustic-mode))
+  )
 
 (use-package! ron-mode
   :defer t
   :mode (("\\.ron\\'" . ron-mode)))
+
+(setq dap-cpptools-extension-version "1.5.1")
+
+  (with-eval-after-load 'lsp-rust
+    (require 'dap-cpptools))
+
+  (with-eval-after-load 'dap-cpptools
+    ;; Add a template specific for debugging Rust programs.
+    ;; It is used for new projects, where I can M-x dap-edit-debug-template
+    (dap-register-debug-template "Rust::CppTools Run Configuration"
+                                 (list :type "cppdbg"
+                                       :request "launch"
+                                       :name "Rust::Run"
+                                       :MIMode "gdb"
+                                       :miDebuggerPath "rust-gdb"
+                                       :environment []
+                                       :program "${workspaceFolder}/target/debug/hello / replace with binary"
+                                       :cwd "${workspaceFolder}"
+                                       :console "external"
+                                       :dap-compilation "cargo build"
+                                       :dap-compilation-dir "${workspaceFolder}")))
+
+  (with-eval-after-load 'dap-mode
+    (setq dap-default-terminal-kind "integrated") ;; Make sure that terminal programs open a term for I/O in an Emacs buffer
+    (dap-auto-configure-mode +1))
+
+
+;; Cucumber feature files
+(require 'feature-mode)
+(add-to-list 'auto-mode-alist '("\.features$" . feature-mode))
 
 ;; Java
 ;;

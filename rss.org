@@ -3,6 +3,7 @@
 ** Programming :programming:
 *** [[https://this-week-in-rust.org/rss.xml][This Week in Rust]] :rust:
 *** [[https://blog.golang.org/feed.atom?format=xml][Go]] :go:
+*** [[https://gamedev.rs/rss.xml][Rust Game Dev]] :rust: :gamedev:
 ** Gaming :gaming:
 *** [[http://www.bay12games.com/dwarves/dev_now.rss][Dwarf Fortress]]
 ** Keyboards :keyboards:
