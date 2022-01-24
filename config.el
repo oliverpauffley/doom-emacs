@@ -107,10 +107,6 @@
     (dap-auto-configure-mode +1))
 
 
-;; Cucumber feature files
-(require 'feature-mode)
-(add-to-list 'auto-mode-alist '("\.features$" . feature-mode))
-
 ;; Java
 ;;
 (setq lsp-java-format-settings-url "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml")
