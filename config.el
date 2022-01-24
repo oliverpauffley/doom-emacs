@@ -195,6 +195,12 @@
 (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=yes"
       vterm-shell "zsh")
 
+;; nix lsp
+(add-to-list 'lsp-language-id-configuration '(nix-mode . "nix"))
+(lsp-register-client
+ (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
+                  :major-modes '(nix-mode)
+                  :server-id 'nix))
 ;; EXWM bindings
 (defun my-exwm-launch (command)
   (lambda ()
