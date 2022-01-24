@@ -34,13 +34,13 @@
 
 ;; Modeline settings
     (custom-set-faces!
-      '(mode-line :family "GohuFont Nerd Font")
-      '(mode-line-inactive :family "GohuFont Nerd Font"))
+      '(mode-line :family "GohuFont")
+      '(mode-line-inactive :family "GohuFont"))
 (setq doom-modeline-modal-icon nil)
 
 ;; set font
-(setq doom-font (font-spec :family "mononoki Nerd font" :size 35 )
-      doom-variable-pitch-font (font-spec :family "Source Code Pro" :size  35))
+(setq doom-font (font-spec :family "mononoki" :size 14 )
+      doom-variable-pitch-font (font-spec :family "DejaVu Sans Mono" :size  14))
 
 ;; Projectile
 (setq projectile-project-search-path '("~/code" "~/code/rust" "~/go/src/github.com/utilitywarehouse"))
@@ -139,13 +139,6 @@
       (:prefix "o"
        :desc "Elfeed" "E" 'elfeed))
 
-(setq org-gcal-client-id (get-gcal-config-value 'client-id)
-      org-gcal-client-secret (get-gcal-config-value 'client-secret)
-      org-gcal-fetch-file-alist '(("mrpauffley@gmail.com" .  "~/org/schedule.org")))
-
-(add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
-(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
-
 ;; set org capture templates
 (after! org
   ;; PlantUML settings
@@ -207,6 +200,20 @@
 ;; if our mail server lives at smtp.example.org; if you have a local
 ;; mail-server, simply use 'localhost' here.
 (setq smtpmail-smtp-server "smtp.gmail.com")
+
+;; vterm settings
+(setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=yes"
+      vterm-shell "zsh")
+
+;; EXWM bindings
+(defun my-exwm-launch (command)
+  (lambda ()
+    (interactive)
+    (start-process-shell-command
+     command nil command)))
+
+(setq exwm-input-global-keys
+      `(([?\s-d] . ,(my-exwm-launch "rofi -show run"))))
 
 
 ;; Here are some additional functions/macros that could help you configure Doom:

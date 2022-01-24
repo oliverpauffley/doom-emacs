@@ -49,7 +49,9 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-(package! smudge)
+(package! exwm)
+(package! dmenu)
+(package! counsel-spotify)
 (package! protobuf-mode)
 (package! go-impl)
 (package! kubel)
