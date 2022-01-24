@@ -127,12 +127,6 @@
       :i "TAB" #'cdlatex-tab)
 (add-hook 'latex-mode-hook 'turn-on-cdlatex)
 
-;; org-gcal storing secrets in gcal-secret.json
-(require 'json)
-(defun get-gcal-config-value (key)
-  "Return the value of the json secret for key"
-  (cdr (assoc key (json-read-file "~/.doom.d/gcal-secret.json"))))
-
 (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
 (setq rmh-elfeed-org-files ' ("~/.doom.d/rss.org"))
 (map! :leader
