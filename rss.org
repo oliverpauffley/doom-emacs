@@ -6,5 +6,3 @@
 *** [[https://gamedev.rs/rss.xml][Rust Game Dev]] :rust: :gamedev:
 ** Gaming :gaming:
 *** [[http://www.bay12games.com/dwarves/dev_now.rss][Dwarf Fortress]]
-** Keyboards :keyboards:
-*** [[https://kbd.news/rss.php][Keyboard Builders Digest]]

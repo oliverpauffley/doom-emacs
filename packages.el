@@ -67,3 +67,6 @@
 	  :recipe (:host github :repo "magit/git-modes"
 		   :files ("gitignore-mode.el")))
 (package! string-inflection)
+(package! earthfile-mode)
+(package! mermaid-mode)
+(package! highlight)

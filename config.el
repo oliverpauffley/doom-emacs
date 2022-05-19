@@ -34,13 +34,18 @@
 
 ;; Modeline settings
     (custom-set-faces!
-      '(mode-line :family "GohuFont")
-      '(mode-line-inactive :family "GohuFont"))
+      '(mode-line :family "GohuFont Nerd Font")
+      '(mode-line-inactive :family "GohuFont Nerd Font"))
 (setq doom-modeline-modal-icon nil)
 
+
+;; TODO use something like this unless to set the font without errors.
+;;(setq doom-font (font-spec :family "Attribute Mono" :size 22))
+;;(unless (find-font doom-font)
+;;  (setq doom-font (font-spec :family "Cascadia Code PL" :size 20)))
 ;; set font
-(setq doom-font (font-spec :family "mononoki" :size 14 )
-      doom-variable-pitch-font (font-spec :family "DejaVu Sans Mono" :size  14))
+(setq doom-font (font-spec :family "mononoki Nerd Font" :size 35 )
+      doom-variable-pitch-font (font-spec :family "DejaVu Sans Mono" :size  30))
 
 ;; Projectile
 (setq projectile-project-search-path '("~/code" "~/code/rust" "~/go/src/github.com/utilitywarehouse"))
@@ -145,9 +150,6 @@
    org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(i)" "BLOCKED(b)" "|" "DONE(d)" "CANCELLED(c)"))
    org-capture-templates
    '(
-     ("a" "Appointment" entry
-      (file "~/org/schedule.org")
-      "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END\n\n")
      ("t" "Personal todo" entry
       (file+olp +org-capture-todo-file "Inbox" "Home")
       "* TODO %?\n%i\n%a" :prepend t)
@@ -157,6 +159,9 @@
      ("n" "Personal notes" entry
       (file+headline +org-capture-notes-file "Inbox")
       "* %u %?\n%i\n%a" :prepend t)
+     ("j" "Journal" entry
+      (file+olp+datetree +org-capture-journal-file)
+      "* %U %?\n%i\n%a" :prepend t)
      ("j" "Journal" entry
       (file+olp+datetree +org-capture-journal-file)
       "* %U %?\n%i\n%a" :prepend t)
@@ -192,22 +197,13 @@
 (setq smtpmail-smtp-server "smtp.gmail.com")
 
 ;; vterm settings
-(setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=yes"
-      vterm-shell "zsh")
+(setq vterm-shell "zsh")
 
 ;; nix lsp
 (add-hook 'nix-mode-hook #'lsp)
 
-;; EXWM bindings
-(defun my-exwm-launch (command)
-  (lambda ()
-    (interactive)
-    (start-process-shell-command
-     command nil command)))
-
-(setq exwm-input-global-keys
-      `(([?\s-d] . ,(my-exwm-launch "rofi -show run"))))
-
+;; earthfiles
+(add-to-list 'load-path "path/to/earthfile-mode")
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
