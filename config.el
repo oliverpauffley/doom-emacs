@@ -44,8 +44,8 @@
 ;;(unless (find-font doom-font)
 ;;  (setq doom-font (font-spec :family "Cascadia Code PL" :size 20)))
 ;; set font
-(setq doom-font (font-spec :family "mononoki Nerd Font" :size 35 )
-      doom-variable-pitch-font (font-spec :family "DejaVu Sans Mono" :size  30))
+(setq doom-font (font-spec :family "mononoki Nerd Font" :size 16 )
+      doom-variable-pitch-font (font-spec :family "DejaVu Sans Mono" :size  16))
 
 ;; Projectile
 (setq projectile-project-search-path '("~/code" "~/code/rust" "~/go/src/github.com/utilitywarehouse"))
@@ -197,7 +197,7 @@
 (setq smtpmail-smtp-server "smtp.gmail.com")
 
 ;; vterm settings
-(setq vterm-shell "zsh")
+(setq vterm-shell "fish")
 
 ;; nix lsp
 (add-hook 'nix-mode-hook #'lsp)
