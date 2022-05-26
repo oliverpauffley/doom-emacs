@@ -34,8 +34,8 @@
 
 ;; Modeline settings
     (custom-set-faces!
-      '(mode-line :family "GohuFont Nerd Font")
-      '(mode-line-inactive :family "GohuFont Nerd Font"))
+      '(mode-line :family "GohuFont Powerline")
+      '(mode-line-inactive :family "GohuFont Powerline"))
 (setq doom-modeline-modal-icon nil)
 
 
@@ -48,11 +48,10 @@
       doom-variable-pitch-font (font-spec :family "DejaVu Sans Mono" :size  16))
 
 ;; Projectile
-(setq projectile-project-search-path '("~/code" "~/code/rust" "~/go/src/github.com/utilitywarehouse"))
+(setq projectile-project-search-path '("~/code" "~/code/"))
 
 ;; Magit
-(setq magit-repository-directories `(("~/code". 1)
-                                     ("~/go/src/github.com/utilitywarehouse" . 1)))
+(setq magit-repository-directories `(("~/code". 5)))
 
 
 ;; Kubernetes bindings
