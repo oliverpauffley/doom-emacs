@@ -49,13 +49,10 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-(package! exwm)
 (package! dmenu)
 (package! counsel-spotify)
 (package! protobuf-mode)
 (package! go-impl)
-(package! kubel)
-(package! kubel-evil)
 (package! graphvis-dot-mode
   :recipe (:host github :repo "ppareit/graphviz-dot-mode"))
 (package! uuidgen
@@ -67,6 +64,12 @@
 	  :recipe (:host github :repo "magit/git-modes"
 		   :files ("gitignore-mode.el")))
 (package! string-inflection)
-(package! earthfile-mode)
 (package! mermaid-mode)
 (package! highlight)
+(package! org-modern)
+(package! copilot
+  :recipe (:host github :repo "zerolfx/copilot.el"  :files ("*.el" "dist")))
+
+(package! graphql-mode)
+(package! yuck-mode
+  :recipe (:host github :repo "mmcjimsey26/yuck-mode" :files ("yuck-mode.el")))

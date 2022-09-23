@@ -48,12 +48,15 @@
       doom-variable-pitch-font (font-spec :family "DejaVu Sans Mono" :size  30))
 
 ;; Projectile
-(setq projectile-project-search-path '("~/code" "~/code/rust" "~/go/src/github.com/utilitywarehouse"))
+(setq
+ projectile-project-search-path '("~/code" "~/code/rust" "~/go/src/github.com/utilitywarehouse")
+ )
 
 ;; Magit
 (setq magit-repository-directories `(("~/code". 1)
                                      ("~/go/src/github.com/utilitywarehouse" . 1)))
 
+(setq forge-owned-accounts '(("oliverpauffley" nil)))
 
 ;; Kubernetes bindings
 (use-package kubernetes
@@ -197,13 +200,35 @@
 (setq smtpmail-smtp-server "smtp.gmail.com")
 
 ;; vterm settings
-(setq vterm-shell "zsh")
+(setq vterm-shell "fish")
 
 ;; nix lsp
 (add-hook 'nix-mode-hook #'lsp)
 
 ;; earthfiles
 (add-to-list 'load-path "path/to/earthfile-mode")
+
+;; Github copilot
+;; accept completion from copilot and fallback to company
+(defun my-tab ()
+  (interactive)
+  (or (copilot-accept-completion)
+      (company-indent-or-complete-common nil)))
+
+(setq lsp-eslint-node-path "/home/ollie/.nvm/versions/node/v17.9.1/bin/node")
+(setq lsp-clients-svlangserver-node-command "/home/ollie/.nvm/versions/node/v17.9.1/bin/node")
+(setq copilot-node-executable "/home/ollie/.nvm/versions/node/v17.9.1/bin/node")
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (("C-TAB" . 'copilot-accept-completion-by-word)
+         ("C-<tab>" . 'copilot-accept-completion-by-word)
+         ("M-TAB" . 'copilot-accept-completion-by-line)
+         :map company-active-map
+         ("<tab>" . 'my-tab)
+         ("TAB" . 'my-tab)
+         :map company-mode-map
+         ("<tab>" . 'my-tab)
+         ("TAB" . 'my-tab)))
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
