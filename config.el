@@ -34,8 +34,8 @@
 
 ;; Modeline settings
     (custom-set-faces!
-      '(mode-line :family "GohuFont Nerd Font")
-      '(mode-line-inactive :family "GohuFont Nerd Font"))
+      '(mode-line :family "GohuFont Powerline")
+      '(mode-line-inactive :family "GohuFont Powerline"))
 (setq doom-modeline-modal-icon nil)
 
 
@@ -44,8 +44,8 @@
 ;;(unless (find-font doom-font)
 ;;  (setq doom-font (font-spec :family "Cascadia Code PL" :size 20)))
 ;; set font
-(setq doom-font (font-spec :family "mononoki Nerd Font" :size 35 )
-      doom-variable-pitch-font (font-spec :family "DejaVu Sans Mono" :size  30))
+(setq doom-font (font-spec :family "mononoki Nerd Font" :size 16 )
+      doom-variable-pitch-font (font-spec :family "DejaVu Sans Mono" :size  16))
 
 ;; Projectile
 (setq
@@ -53,8 +53,7 @@
  )
 
 ;; Magit
-(setq magit-repository-directories `(("~/code". 1)
-                                     ("~/go/src/github.com/utilitywarehouse" . 1)))
+(setq magit-repository-directories `(("~/code". 5)))
 
 (setq forge-owned-accounts '(("oliverpauffley" nil)))
 
