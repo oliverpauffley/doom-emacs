@@ -8,10 +8,7 @@
 ;; clients, file templates and snippets.
 (setq user-full-name "Oliver Pauffley"
       user-mail-address "mrpauffley@gmail.com")
-<<<<<<< HEAD
-=======
 (setq auth-sources '("~/.authinfo.gpg"))
->>>>>>> 79a25b4 (init)
 
 ;; turn off tabs
 (setq-default indent-tabs-mode nil)
