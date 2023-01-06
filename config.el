@@ -8,6 +8,10 @@
 ;; clients, file templates and snippets.
 (setq user-full-name "Oliver Pauffley"
       user-mail-address "mrpauffley@gmail.com")
+<<<<<<< HEAD
+=======
+(setq auth-sources '("~/.authinfo.gpg"))
+>>>>>>> 79a25b4 (init)
 
 ;; turn off tabs
 (setq-default indent-tabs-mode nil)
@@ -38,14 +42,15 @@
       '(mode-line-inactive :family "GohuFont Nerd Font"))
 (setq doom-modeline-modal-icon nil)
 
+(load-file "~/.doom.d/functions.el")
 
 ;; TODO use something like this unless to set the font without errors.
 ;;(setq doom-font (font-spec :family "Attribute Mono" :size 22))
 ;;(unless (find-font doom-font)
 ;;  (setq doom-font (font-spec :family "Cascadia Code PL" :size 20)))
 ;; set font
-(setq doom-font (font-spec :family "mononoki Nerd Font" :size 35 )
-      doom-variable-pitch-font (font-spec :family "GohuFont Nerd Font" :size  30))
+(setq doom-font (font-spec :family "mononoki Nerd Font" :size 25 )
+      doom-variable-pitch-font (font-spec :family "GohuFont Nerd Font" :size  25))
 
 ;; Projectile
 (setq
@@ -74,7 +79,7 @@
 
 ;; Go settings
 (setq gofmt-command "goimports")
-
+(add-hook 'before-save-hook 'gofmt-before-save)
 
 ;; Rust Settings
 ;;
@@ -82,7 +87,9 @@
   (setq rustic-lsp-server 'rust-analyzer
   lsp-rust-analyzer-cargo-watch-command "clippy")
   (add-to-list 'auto-mode-alist '("\\.ron\\'" . rustic-mode))
+  (setq lsp-rust-analyzer-inlay-hints-mode "true")
   )
+
 
 (use-package! ron-mode
   :defer t
@@ -96,7 +103,7 @@
   (with-eval-after-load 'dap-cpptools
     ;; Add a template specific for debugging Rust programs.
     ;; It is used for new projects, where I can M-x dap-edit-debug-template
-    (dap-register-debug-template "Rust::CppTools Run Configuration"
+    (dap-register-debug-template "Launch Executable"
                                  (list :type "cppdbg"
                                        :request "launch"
                                        :name "Rust::Run"
@@ -108,7 +115,6 @@
                                        :console "external"
                                        :dap-compilation "cargo build"
                                        :dap-compilation-dir "${workspaceFolder}")))
-
   (with-eval-after-load 'dap-mode
     (setq dap-default-terminal-kind "integrated") ;; Make sure that terminal programs open a term for I/O in an Emacs buffer
     (dap-auto-configure-mode +1))
@@ -203,31 +209,6 @@
 
 ;; nix lsp
 (add-hook 'nix-mode-hook #'lsp)
-
-;; earthfiles
-(add-to-list 'load-path "path/to/earthfile-mode")
-
-;; Github copilot
-;; accept completion from copilot and fallback to company
-(defun my-tab ()
-  (interactive)
-  (or (copilot-accept-completion)
-      (company-indent-or-complete-common nil)))
-
-(setq lsp-eslint-node-path "/home/ollie/.nvm/versions/node/v17.9.1/bin/node")
-(setq lsp-clients-svlangserver-node-command "/home/ollie/.nvm/versions/node/v17.9.1/bin/node")
-(setq copilot-node-executable "/home/ollie/.nvm/versions/node/v17.9.1/bin/node")
-(use-package! copilot
-  :hook (prog-mode . copilot-mode)
-  :bind (("C-TAB" . 'copilot-accept-completion-by-word)
-         ("C-<tab>" . 'copilot-accept-completion-by-word)
-         ("M-TAB" . 'copilot-accept-completion-by-line)
-         :map company-active-map
-         ("<tab>" . 'my-tab)
-         ("TAB" . 'my-tab)
-         :map company-mode-map
-         ("<tab>" . 'my-tab)
-         ("TAB" . 'my-tab)))
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;

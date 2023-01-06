@@ -67,9 +67,8 @@
 (package! mermaid-mode)
 (package! highlight)
 (package! org-modern)
-(package! copilot
-  :recipe (:host github :repo "zerolfx/copilot.el"  :files ("*.el" "dist")))
-
 (package! graphql-mode)
 (package! yuck-mode
   :recipe (:host github :repo "mmcjimsey26/yuck-mode" :files ("yuck-mode.el")))
+(package! org-d20)
+(package! org-drill)
