@@ -3,7 +3,6 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
 (setq user-full-name "Oliver Pauffley"
@@ -31,7 +30,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-gruvbox)
+(setq doom-theme 'doom-pine)
 
 ;; Modeline settings
     (custom-set-faces!
@@ -81,8 +80,8 @@
 ;; Rust Settings
 ;;
 (after! rustic
-  (setq rustic-lsp-server 'rust-analyzer
-  lsp-rust-analyzer-cargo-watch-command "clippy")
+  (setq rustic-lsp-server 'rust-analyzer)
+  (setq lsp-rust-analyzer-cargo-watch-command "clippy")
   (add-to-list 'auto-mode-alist '("\\.ron\\'" . rustic-mode))
   (setq lsp-rust-analyzer-inlay-hints-mode "true")
   )
@@ -129,6 +128,8 @@
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
 
+(setq org-table-convert-region-max-lines 10000)
+
 (map! :map cdlatex-mode-map
       :i "TAB" #'cdlatex-tab)
 (add-hook 'latex-mode-hook 'turn-on-cdlatex)
@@ -164,6 +165,9 @@
      ("n" "Personal notes" entry
       (file+headline +org-capture-notes-file "Inbox")
       "* %u %?\n%i\n%a" :prepend t)
+     ("W" "Wishlist" table-line
+      (file+headline "wishlist.org" "Wishlist")
+      "| %t | %? | %x |  |")
      ("j" "Journal" entry
       (file+olp+datetree +org-capture-journal-file)
       "* %U %?\n%i\n%a" :prepend t)
@@ -206,6 +210,8 @@
 
 ;; nix lsp
 (add-hook 'nix-mode-hook #'lsp)
+;; org dnd export
+(require 'ox-dnd)
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;

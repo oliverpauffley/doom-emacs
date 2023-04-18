@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: org-d20-comment
+# uuid: <dnd
+# key: <dnd
+# --
+# -*- mode: org; mode: org-d20; org-d20-party: (${1:$(mapconcat (lambda(x) (format "'%s'" x)) (split-string yas-text "," t "( \t)") ", ")}) -*-
+$0

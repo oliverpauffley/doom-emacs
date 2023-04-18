@@ -57,12 +57,7 @@
   :recipe (:host github :repo "ppareit/graphviz-dot-mode"))
 (package! uuidgen
   :recipe (:host github :repo "kanru/uuidgen-el"))
-(package! gitconfig-mode
-	  :recipe (:host github :repo "magit/git-modes"
-			 :files ("gitconfig-mode.el")))
-(package! gitignore-mode
-	  :recipe (:host github :repo "magit/git-modes"
-		   :files ("gitignore-mode.el")))
+
 (package! string-inflection)
 (package! mermaid-mode)
 (package! highlight)
@@ -72,3 +67,5 @@
   :recipe (:host github :repo "mmcjimsey26/yuck-mode" :files ("yuck-mode.el")))
 (package! org-d20)
 (package! org-drill)
+(package! ox-dnd
+  :recipe (:host github :repo "xeals/emacs-org-dnd" :files ("ox-dnd.el")))
