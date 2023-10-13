@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: latex
+# key: <al
+# uuid: <al
+# --
+\begin{${1:align*}}
+    $0
+\end{$1}

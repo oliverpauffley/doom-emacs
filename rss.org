@@ -3,6 +3,9 @@
 ** Programming :programming:
 *** [[https://this-week-in-rust.org/rss.xml][This Week in Rust]] :rust:
 *** [[https://blog.golang.org/feed.atom?format=xml][Go]] :go:
-*** [[https://gamedev.rs/rss.xml][Rust Game Dev]] :rust: :gamedev:
+*** [[https://gamedev.rs/rss.xml][Rust Game Dev]] :gamedev:
+*** [[https://weekly.nixos.org/feeds/all.rss.xml][Nixos]] :nix:
 ** Gaming :gaming:
 *** [[http://www.bay12games.com/dwarves/dev_now.rss][Dwarf Fortress]]
+** Emacs
+*** [[https://planet.emacslife.com/atom.xml][Emacs]]

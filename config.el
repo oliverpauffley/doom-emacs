@@ -8,11 +8,15 @@
 (setq user-full-name "Oliver Pauffley"
       user-mail-address "mrpauffley@gmail.com")
 (setq auth-sources '("~/.authinfo.gpg"))
+;; TODO set this up
+;;(auth-source-1password-enable)
+;;(setq auth-source-1password-vault "Private")
 
 ;; turn off tabs
 (setq-default indent-tabs-mode nil)
 ;; set indents to 4
 (setq-default tab-width 4)
+(setq-default require-final-newline "visit-save")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
@@ -30,23 +34,18 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-pine)
+;;(load-theme 'base16-tokyo-night-dark)
 
 ;; Modeline settings
-    (custom-set-faces!
-      '(mode-line :family "GohuFont Nerd Font")
-      '(mode-line-inactive :family "GohuFont Nerd Font"))
+(custom-set-faces!
+  '(mode-line :family "GohuFont 14 Nerd Font")
+  '(mode-line-inactive :family "GohuFont 14 Nerd Font"))
 (setq doom-modeline-modal-icon nil)
 
 (load-file "~/.doom.d/functions.el")
 
-;; TODO use something like this unless to set the font without errors.
-;;(setq doom-font (font-spec :family "Attribute Mono" :size 22))
-;;(unless (find-font doom-font)
-;;  (setq doom-font (font-spec :family "Cascadia Code PL" :size 20)))
-;; set font
-(setq doom-font (font-spec :family "mononoki Nerd Font" :size 25 )
-      doom-variable-pitch-font (font-spec :family "GohuFont Nerd Font" :size  25))
+(setq doom-font (font-spec :family "mononoki Nerd Font" :size 24 )
+      doom-variable-pitch-font (font-spec :family "mononoki Nerd Font" :size  24))
 
 ;; Projectile
 (setq
@@ -58,17 +57,6 @@
 
 (setq forge-owned-accounts '(("oliverpauffley" nil)))
 
-;; Kubernetes bindings
-(use-package kubernetes
-  :defer
-  :commands (kubel))
-(use-package kubel-evil
-  :defer
-  :after kubel)
-(map! :leader
-      (:prefix "o"
-       :desc "Kubernetes" "K" 'kubel))
-
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
@@ -78,7 +66,6 @@
 (add-hook 'before-save-hook 'gofmt-before-save)
 
 ;; Rust Settings
-;;
 (after! rustic
   (setq rustic-lsp-server 'rust-analyzer)
   (setq lsp-rust-analyzer-cargo-watch-command "clippy")
@@ -91,43 +78,20 @@
   :defer t
   :mode (("\\.ron\\'" . ron-mode)))
 
-(setq dap-cpptools-extension-version "1.5.1")
-
-  (with-eval-after-load 'lsp-rust
-    (require 'dap-cpptools))
-
-  (with-eval-after-load 'dap-cpptools
-    ;; Add a template specific for debugging Rust programs.
-    ;; It is used for new projects, where I can M-x dap-edit-debug-template
-    (dap-register-debug-template "Launch Executable"
-                                 (list :type "cppdbg"
-                                       :request "launch"
-                                       :name "Rust::Run"
-                                       :MIMode "gdb"
-                                       :miDebuggerPath "rust-gdb"
-                                       :environment []
-                                       :program "${workspaceFolder}/target/debug/hello / replace with binary"
-                                       :cwd "${workspaceFolder}"
-                                       :console "external"
-                                       :dap-compilation "cargo build"
-                                       :dap-compilation-dir "${workspaceFolder}")))
-  (with-eval-after-load 'dap-mode
-    (setq dap-default-terminal-kind "integrated") ;; Make sure that terminal programs open a term for I/O in an Emacs buffer
-    (dap-auto-configure-mode +1))
-
-
-;; Java
-;;
-(setq lsp-java-format-settings-url "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml")
-
-(setq org-format-latex-options
-   '(:foreground default :background default :scale 3 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
-     ("begin" "$1" "$" "$$" "\\(" "\\[")))
+;; irc
+(set-irc-server! "irc.libera.chat"
+  '(:tls t
+    :port 6697
+    :nick "olliep"
+    :sasl-password my-nickserver-password
+    :sasl-password (auth-source-pick-first-password :host "Libera" :user "password")
+    :channels ("#haskell-beginners")))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
-
+;; increase latex font size
+(after! org (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5)))
 (setq org-table-convert-region-max-lines 10000)
 
 (map! :map cdlatex-mode-map
@@ -142,15 +106,6 @@
 
 ;; set org capture templates
 (after! org
-  ;; PlantUML settings
-  (setq
-   plantuml-jar-path (expand-file-name "/usr/share/java/plantuml/plantuml.jar")
-   org-plantuml-jar-path (expand-file-name "/usr/share/java/plantuml/plantuml.jar")
-   plantuml-default-exec-mode 'jar
-   org-columns-default-format "%50ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM"
-   )
-  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)(nix . t)))
   (setq
    ;; Org Capture
    org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(i)" "BLOCKED(b)" "|" "DONE(d)" "CANCELLED(c)"))
@@ -189,30 +144,45 @@
      ("on" "Project notes" entry #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
      ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t))))
 
-
-
 ;; Emails
 (set-email-account! "mrpauffley@gmail.com"
                     '((mu4e-sent-folder       . "/[Gmail].Sent Mail")
-                      (mu4e-drafts-folder     . "/drafts")
+                      (mu4e-drafts-folder     . "/[Gmail].Drafts")
                       (mu4e-trash-folder      . "/[Gmail].Bin")
                       (mu4e-refile-folder     . "/[Gmail].All Mail")
                       (smtpmail-smtp-user . "mrpauffley@gmail.com")
+                      (smtpmail-smtp-server . "smtp.gmail.com")
+                      (user-mail-address . "mrpauffley@gmail.com")
                       (mu4e-compose-signature . "---\nOliver Pauffley"))t)
+
 ;; tell message-mode how to send mail
 (setq message-send-mail-function 'smtpmail-send-it)
-;; if our mail server lives at smtp.example.org; if you have a local
-;; mail-server, simply use 'localhost' here.
-(setq smtpmail-smtp-server "smtp.gmail.com")
 
 ;; vterm settings
-(setq vterm-shell "fish")
+(setq vterm-shell "nu")
 
-;; nix lsp
+;; nix mode
 (add-hook 'nix-mode-hook #'lsp)
+(set-formatter! 'alejandra "alejandra --quiet" :modes '(nix-mode))
+
 ;; org dnd export
 (require 'ox-dnd)
 
+;; Smartparens bindings set to be called with SPC + l as prefix
+(map!
+ :map smartparens-mode-map
+ :leader (:prefix ("l" . "Lisps")
+          :nvie "f" #'sp-next-sexp
+          :nvie "b" #'sp-forward-barf-sexp
+          :nvim "u" #'sp-unwrap-sexp
+          :nie "k" #'sp-kill-sexp
+          :nie "s" #'sp-split-sexp
+          :nie "l" #'sp-forward-slurp-sexp
+          :nie "h" #'sp-backward-slurp-sexp
+          :nie "y" #'sp-copy-sexp
+          :nie "(" #'sp-wrap-round
+          :nie "[" #'sp-wrap-square
+          :nie "{" #'sp-wrap-curly))
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
