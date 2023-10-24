@@ -34,7 +34,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-;;(load-theme 'base16-tokyo-night-dark)
+(setq doom-theme 'doom-tokyo-night)
 
 ;; Modeline settings
 (custom-set-faces!
@@ -167,6 +167,13 @@
 
 ;; org dnd export
 (require 'ox-dnd)
+
+;; show images in the correct orientations
+(with-eval-after-load 'image-dired
+  (add-to-list 'image-dired-cmd-create-thumbnail-options "-auto-orient")
+  (add-to-list 'image-dired-cmd-create-temp-image-options "-auto-orient")
+  (add-to-list 'image-dired-cmd-create-standard-thumbnail-options
+               "-auto-orient"))
 
 ;; Smartparens bindings set to be called with SPC + l as prefix
 (map!
