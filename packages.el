@@ -48,26 +48,37 @@
                                         ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
                                         ;(unpin! t)
-
 (package! protobuf-mode)
+(package! earthfile-mode)
 (package! go-impl)
 (package! uuidgen
   :recipe (:host github :repo "kanru/uuidgen-el"))
-
 (package! string-inflection)
 (package! mermaid-mode)
 (package! highlight)
-(package! org-modern)
 (package! graphql-mode)
-(package! yuck-mode
-  :recipe (:host github :repo "mmcjimsey26/yuck-mode" :files ("yuck-mode.el")))
+(package! graphql)
+(package! ob-graphql :recipe (:host github :repo "jdormit/ob-graphql" :files ("ob-graphql.el")))
 (package! org-d20)
 (package! ox-dnd
   :recipe (:host github :repo "xeals/emacs-org-dnd" :files ("ox-dnd.el")))
 (package! base16-theme)
 (package! org-drill)
-(package! janet-mode
-  :recipe (:host github :repo "ALSchwalm/janet-mode" :files ("janet-mode.el")))
-(package! ijanet :recipe (:host github :repo "serialdev/ijanet-mode"))
-(package! auth-source-1password
-  :recipe (:host github :repo "dlobraico/auth-source-1password" :files ("auth-source-1password.el")))
+(package! csv-mode)
+(package! slack
+  :recipe (:host github :repo "Konubinix/emacs-slack"))
+(package! just-mode)
+(package! justl)
+(package! haskell-snippets)
+;; a package to learn transient
+(package! transient-showcase
+  :recipe (:host github :repo "positron-solutions/transient-showcase"))
+(package! leetcode)
+(package! exercism
+  :recipe (:host github :repo "anonimitoraf/exercism.el" :files ("exercism.el")))
+(package! ox-hugo)
+(package! ox-zola :recipe (:host github :repo "gicrisf/ox-zola"))
+(package! chatgpt-shell)
+;; (use-package chatgpt-shell
+;;   :requires shell-maker
+;;   :straight (:host github :repo "xenodium/chatgpt-shell" :files ("chatgpt-shell.el"))))

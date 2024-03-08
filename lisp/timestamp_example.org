@@ -1,0 +1,13 @@
+#+title: Timestamp Example
+
+This is an example of how to use the timestamp.el code without a minor mode. This should update on changes:
+Wow it works! Pretty cool that this works right?
+Written:20.
+
+
+# Local variables:
+# eval: (add-hook 'local-write-file-hooks 'update-writestamps)
+# writestamp-prefix: "Written:"
+# writestamp-suffix: "."
+# writestamp-format: "%D"
+# End:
