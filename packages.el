@@ -48,6 +48,8 @@
                                         ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
                                         ;(unpin! t)
+(package! jcl-mode
+  :recipe (:host github :repo "Trisk3lion/jcl-mode"))
 (package! protobuf-mode)
 (package! earthfile-mode)
 (package! go-impl)
@@ -65,8 +67,6 @@
 (package! base16-theme)
 (package! org-drill)
 (package! csv-mode)
-(package! slack
-  :recipe (:host github :repo "Konubinix/emacs-slack"))
 (package! just-mode)
 (package! justl)
 (package! haskell-snippets)
@@ -78,7 +78,6 @@
   :recipe (:host github :repo "anonimitoraf/exercism.el" :files ("exercism.el")))
 (package! ox-hugo)
 (package! ox-zola :recipe (:host github :repo "gicrisf/ox-zola"))
+(package! coverage :recipe (:host github :repo "google/coverage"))
 (package! chatgpt-shell)
-;; (use-package chatgpt-shell
-;;   :requires shell-maker
-;;   :straight (:host github :repo "xenodium/chatgpt-shell" :files ("chatgpt-shell.el"))))
+(package! eplot :recipe (:host github :repo "larsmagne/eplot"))

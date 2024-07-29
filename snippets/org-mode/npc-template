@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+# name: npc template
+# key: <npc
+# --
+* ${1:Name}
+** Appearance
+Pithy 1-2 sentences
+** Quote
+Something in their voice?
+** Roleplaying
+Two - three brief bullet points.
+- simple physical action to perform.
+- personality trait.
+- general attitude.
+** Background
+keep it short. /Essential context/ and /interesting anecdotes/ for the players
+** Key info
+bullet points, what will the PCs learns
+** Stat Block
