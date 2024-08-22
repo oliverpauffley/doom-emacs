@@ -61,6 +61,7 @@
 (package! graphql-mode)
 (package! graphql)
 (package! ob-graphql :recipe (:host github :repo "jdormit/ob-graphql" :files ("ob-graphql.el")))
+(package! ob-grpc :recipe (:host github :repo "shsms/ob-grpc"))
 (package! org-d20)
 (package! ox-dnd
   :recipe (:host github :repo "xeals/emacs-org-dnd" :files ("ox-dnd.el")))
