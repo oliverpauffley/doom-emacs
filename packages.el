@@ -48,10 +48,7 @@
                                         ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
                                         ;(unpin! t)
-(package! jcl-mode
-  :recipe (:host github :repo "Trisk3lion/jcl-mode"))
 (package! protobuf-mode)
-(package! earthfile-mode)
 (package! go-impl)
 (package! uuidgen
   :recipe (:host github :repo "kanru/uuidgen-el"))
@@ -62,23 +59,23 @@
 (package! graphql)
 (package! ob-graphql :recipe (:host github :repo "jdormit/ob-graphql" :files ("ob-graphql.el")))
 (package! ob-grpc :recipe (:host github :repo "shsms/ob-grpc"))
-(package! org-d20)
-(package! ox-dnd
-  :recipe (:host github :repo "xeals/emacs-org-dnd" :files ("ox-dnd.el")))
 (package! base16-theme)
 (package! org-drill)
 (package! csv-mode)
 (package! just-mode)
-(package! justl)
-(package! haskell-snippets)
 ;; a package to learn transient
 (package! transient-showcase
   :recipe (:host github :repo "positron-solutions/transient-showcase"))
-(package! leetcode)
 (package! exercism
   :recipe (:host github :repo "anonimitoraf/exercism.el" :files ("exercism.el")))
 (package! ox-hugo)
-(package! ox-zola :recipe (:host github :repo "gicrisf/ox-zola"))
-(package! coverage :recipe (:host github :repo "google/coverage"))
-(package! chatgpt-shell)
-(package! eplot :recipe (:host github :repo "larsmagne/eplot"))
+(package! gptel)
+(package! feature-mode)
+(package! kubed
+  :recipe (:host github :repo "eshelyaron/kubed"))
+(package! org-dp
+  :recipe (:host github :repo "tj64/org-dp"))
+(package! pr-review)
+
+;; temp fix 28-02-25
+(package! package-lint :pin "21edc6d0d0eadd2d0a537f422fb9b7b8a3ae6991")

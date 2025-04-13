@@ -8,15 +8,24 @@
       user-mail-address "mrpauffley@gmail.com")
 (setq auth-sources '("~/.authinfo.gpg"))
 
-;; TODO set this up
-;;(auth-source-1password-enable)
-;;(setq auth-source-1password-vault "Private")
+;; force emacs to use it's own login for gpg
+(setenv "GPG_AGENT_INFO" nil)
+
+;; (use-package! 1password
+;;   :demand t
+;;   :init
+;;   (message "Enabling 1password ...")
+;;   :config)
 
 ;; turn off tabs
 (setq-default indent-tabs-mode nil)
 ;; set indents to 4
 (setq-default tab-width 4)
 (setq-default require-final-newline "visit-save")
+
+;; autocomplete
+(setq corfu-preselect "first"
+      corfu-auto-prefix 3)
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
@@ -34,22 +43,23 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-tokyo-night)
+(setq doom-theme 'doom-dracula)
 
 ;; Modeline settings
 (custom-set-faces!
-  '(mode-line :family "GohuFont 14 Nerd Font")
-  '(mode-line-inactive :family "GohuFont 14 Nerd Font"))
-(setq doom-modeline-modal-icon t
-      doom-modeline-hud t)
+  '(mode-line :family "departure mono" :size 6 )
+  '(mode-line-inactive :family "departure mono" :size 6 ))
 (setq doom-font (font-spec :family "mononoki Nerd Font" :size 24 )
       doom-variable-pitch-font (font-spec :family "mononoki Nerd Font" :size  24)
-      doom-big-font (font-spec :family "DroidSansM Nerd Font" :size 40))
+      doom-big-font (font-spec :family "mononoki Nerd Font" :size 40))
+(setq doom-modeline-modal-icon t
+      doom-modeline-hud t)
 
 ;; open weblinks in emacs
 (setq +lookup-open-url-fn #'eww)
 
 (set-docsets! 'haskell-mode "Haskell")
+(require 'lsp-mode)
 (use-package lsp-mode
   :ensure t
   :hook ((haskell-mode . lsp-deferred))
@@ -70,72 +80,34 @@
 (setq magit-repository-directories `(("~/code". 5)))
 (setq straight-vc-git-default-protocol "ssh")
 
+;; PR-review
+(evil-ex-define-cmd "prr" #'pr-review)
+(evil-ex-define-cmd "prs" #'pr-review-search)
+(evil-ex-define-cmd "prn" #'pr-review-notification)
+(add-to-list 'browse-url-default-handlers
+             '(pr-review-url-parse . pr-review-open-url))
+(setq pr-review-search-predefined-queries
+      '(("is:pr archived:false author:@me is:open" . "Created")
+        ("is:pr archived:false assignee:@me is:open" . "Assigned")
+        ("is:pr archived:false review-requested:@me is:open" . "Review requests")
+        ("is:pr review-requested:@me is:open -author:app/dependabot" . "Review requests")))
+
+
 (setq forge-owned-accounts '(("oliverpauffley" nil)))
+(add-hook 'code-review-mode-hook
+          (lambda ()
+            ;; include *Code-Review* buffer into current workspace
+            (persp-add-buffer (current-buffer))))
 
-;; just file
-(use-package! justl
-  :config
-  (map! :n "e" 'justl-exec-recipe))
-
-;; Leetcode
-(setq leetcode-prefer-language "rust")
-(setq leetcode-save-solutions t)
-(setq leetcode-directory "~/code/leetcode/src")
 
 ;; Exercism
 (require 'exercism)
 (setq exercism-display-tests-after-run 't)
 
-;; Slack
-(use-package slack
-  :commands (slack-start)
-  :init
-  (setq slack-prefer-current-team t)
-  :config
-  (slack-register-team
-   :name "Utility-Warehouse"
-   :default t
-   :token (auth-source-pick-first-password
-           :host "utilitywarehouse.slack.com"
-           :user "opauffley@uw.co.uk")
-   :cookie (auth-source-pick-first-password
-            :host "utilitywarehouse.slack.com"
-            :user "opauffley@uw.co.uk^cookie")
-   :full-and-display-names t
-   :subscribed-channels '(team-energy-sfe development-tech))
-
-  (evil-define-key 'normal slack-info-mode-map
-    ",u" 'slack-room-update-messages)
-  (evil-define-key 'normal slack-mode-map
-    ",c" 'slack-buffer-kill
-    ",ra" 'slack-message-add-reaction
-    ",rr" 'slack-message-remove-reaction
-    ",rs" 'slack-message-show-reaction-users
-    ",pl" 'slack-room-pins-list
-    ",pa" 'slack-message-pins-add
-    ",pr" 'slack-message-pins-remove
-    ",mm" 'slack-message-write-another-buffer
-    ",me" 'slack-message-edit
-    ",md" 'slack-message-delete
-    ",u" 'slack-room-update-messages
-    ",2" 'slack-message-embed-mention
-    ",3" 'slack-message-embed-channel
-    "\C-n" 'slack-buffer-goto-next-message
-    "\C-p" 'slack-buffer-goto-prev-message)
-  (evil-define-key 'normal slack-edit-message-mode-map
-    ",k" 'slack-message-cancel-edit
-    ",s" 'slack-message-send-from-buffer
-    ",2" 'slack-message-embed-mention
-    ",3" 'slack-message-embed-channel))
-(after! slack
-  (url-cookie-store "d" (auth-source-pick-first-password :host "utilitywarehouse.slack.com" :user "opauffley@uw.co.uk^cookie") nil ".slack.com" "/" t)
-  )
-
-
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
+(setq display-line-numbers-type 'relative)
 
 ;; Go settings
 (setq gofmt-command "goimports")
@@ -155,7 +127,9 @@
 
 ;; Haskell settings
 (after! haskell-mode
-  (setq haskell-stylish-on-save t))
+  (setq haskell-stylish-on-save t
+        haskell-interactive-popup-errors nil)
+  )
 
 ;; irc
 (set-irc-server! "irc.libera.chat"
@@ -184,9 +158,8 @@
   (setq org-latex-src-block-backend 'minted)
 
   (setq org-latex-pdf-process
-        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
   (setq
    ;; Org Capture
    org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(i)" "BLOCKED(b)" "|" "DONE(d)" "CANCELLED(c)"))
@@ -207,9 +180,6 @@
      ("j" "Journal" entry
       (file+olp+datetree +org-capture-journal-file)
       "* %U %?\n%i\n%a" :prepend t)
-     ("j" "Journal" entry
-      (file+olp+datetree +org-capture-journal-file)
-      "* %U %?\n%i\n%a" :prepend t)
      ("p" "Templates for projects")
      ("pt" "Project-local todo" entry
       (file+headline +org-capture-project-todo-file "Inbox")
@@ -225,7 +195,8 @@
      ("on" "Project notes" entry #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
      ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t)))
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5)
-        org-table-convert-region-max-lines 10000)
+        org-table-convert-region-max-lines 10000
+        +org-capture-journal-file "/home/ollie/org/journal.org.gpg")
   ;; src block indentation / editing / syntax highlighting
   (setq org-src-fontify-natively t
         org-src-window-setup 'current-window ;; edit in current window
@@ -233,7 +204,6 @@
         org-src-preserve-indentation t ;; do not put two spaces on the left
         org-src-tab-acts-natively t)
   (require 'ox-hugo)
-  (require 'ox-zola)
   )
 
 ;; Emails
@@ -254,18 +224,13 @@
 (setq vterm-shell "fish")
 (setq explicit-shell-file-name "fish")
 
-;; nix mode
-(add-hook 'nix-mode-hook #'lsp)
-
-;; org dnd export
-(require 'ox-dnd)
-
-
 ;; Linear
 (setq linear-auth-token (auth-source-pick-first-password :host "api.linear.app"))
 
-;; chatgpt shell
-(setq chatgpt-shell-openai-key (auth-source-pick-first-password :host "chatgpt.api"))
+;; chat gpt
+(use-package! gptel
+  :config
+  (setq! gptel-api-key (auth-source-pick-first-password :host "api.openai.com")))
 
 ;; show images in the correct orientations
 (with-eval-after-load 'image-dired
@@ -290,6 +255,16 @@
           :nie "(" #'sp-wrap-round
           :nie "[" #'sp-wrap-square
           :nie "{" #'sp-wrap-curly))
+
+(map! :leader
+      (:prefix "o"
+       :desc "kubed" "k" 'kubed-prefix-map))
+
+(map! :leader
+      (:prefix "r"
+       :desc "make" "m" '+make/run))
+
+(load! "./lisp/opslevel.el")
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
