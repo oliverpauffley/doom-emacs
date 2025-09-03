@@ -4,7 +4,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("7a306767e3d3e8caea20860f60d0a82b3efe1dee0791dc08815d1c08ae4076be"
+   '("0f1341c0096825b1e5d8f2ed90996025a0d013a0978677956a9e61408fcd2c77"
+     "7a306767e3d3e8caea20860f60d0a82b3efe1dee0791dc08815d1c08ae4076be"
      "8c7e832be864674c220f9a9361c851917a93f921fedb7717b1b5ece47690c098"
      "0a998d76c2fb27e3528b0d74a84ff80e5c89e1c42ff4e98c5a99b3a9cad0bfd0"
      "9cda0155ffd0cddac60729f5e821ba7955e1623ec7bcb12ca8e7219c33747e0f"
@@ -19,8 +20,10 @@
      "4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
      "7964b513f8a2bb14803e717e0ac0123f100fb92160dcf4a467f530868ebaae3e" default))
  '(safe-local-variable-values
-   '((haskell-indent-spaces . 4) (haskell-process-type . stack-ghci)
-     (haskell-process-type quote stack-ghci))))
+   '((haskell-process-args-ghci "ghci") (haskell-process-path-ghci . "stack")
+     (haskell-process-type . ghci) (haskell-indent-spaces . 4)
+     (haskell-process-type . stack-ghci) (haskell-process-type quote stack-ghci)))
+ '(send-mail-function 'smtpmail-send-it))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

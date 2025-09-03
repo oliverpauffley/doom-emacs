@@ -78,10 +78,11 @@ Statefulset or Deployment that needs annotations field"
             (let* ((names (opslevel--get-deployment-name))
                    (component-name (car names))
                    (deploy-name (car (cdr names))))
-              (unless (cl-some (lambda (check-file)
-                                 (opslevel--contains-deployment-name-p component-name check-file))
-                               baseDirectory)
-                (opslevel--insert-component-name deploy-name component-name))))))))
+              (if deploy-name
+                  (unless (cl-some (lambda (check-file)
+                                     (opslevel--contains-deployment-name-p component-name check-file))
+                                   baseDirectory)
+                    (opslevel--insert-component-name deploy-name component-name)))))))))
 
 (defun opslevel--construct-component-name (type deploy-name)
   "changes a TYPE and DEPLOY-NAME into a component name for opslevel."
@@ -110,8 +111,33 @@ Statefulset or Deployment that needs annotations field"
       (let ((type-name (downcase (match-string 1 (buffer-string)))))
         (search-forward-regexp (rx "kind: " (or "StatefulSet" "Deployment")) nil t)
         (search-forward "name:" nil t)
-        (let ((name (string-remove-prefix "&app " (string-trim (buffer-substring-no-properties (point) (line-end-position))))))
+        (let* ((rawname (string-remove-prefix "&app " (string-trim (buffer-substring-no-properties (point) (line-end-position)))))
+               (nameprefix (opslevel--get-name-prefix))
+               (namesuffix (opslevel--get-name-suffix))
+               (name (concat nameprefix rawname namesuffix)))
           (list (opslevel--construct-component-name type-name name) name))))))
+
+(defun opslevel--get-name-prefix ()
+  "From a file, finds the parent kustomize-file
+and gets the name-prefix if one exists"
+  (let* ((directory (file-name-parent-directory (buffer-file-name)))
+         (kustomize-name (string-join (list directory "kustomization.yaml") "/")))
+    (with-current-buffer (find-file-noselect kustomize-name)
+      (goto-char (point-min))
+      (if (search-forward "namePrefix: " nil t)
+          (string-trim (buffer-substring-no-properties (point) (line-end-position)))
+        ))))
+
+(defun opslevel--get-name-suffix ()
+  "From a file, finds the parent kustomize-file
+and gets the name-suffix if one exists"
+  (let* ((directory (file-name-parent-directory (buffer-file-name)))
+         (kustomize-name (string-join (list directory "kustomization.yaml") "/")))
+    (with-current-buffer (find-file-noselect kustomize-name)
+      (goto-char (point-min))
+      (if (search-forward "nameSuffix: " nil t)
+          (string-trim (buffer-substring-no-properties (point) (line-end-position)))
+        ))))
 
 (defun opslevel--is-deployment-file-p ()
   "Checks if the current buffer is a deployment file."
@@ -178,7 +204,9 @@ Statefulset or Deployment that needs annotations field"
         (goto-char (point-min))
         (search-forward-regexp (rx "kind: " (or "StatefulSet" "Deployment")) nil t)
         (search-forward "  annotations:" nil t)
-        (let ((annotate (format "    \"app.uw.systems/%s\": \"%s\"" type annotations)))
+        (let* ((key (format "app.uw.systems/%s" type))
+               (annotate (format "    \"%s\": \"%s\"" key annotations)))
+          (opslevel--clear-key key)
           (newline)
           (insert annotate)))))
 
@@ -188,7 +216,15 @@ Statefulset or Deployment that needs annotations field"
     (goto-char (point-min))
     (search-forward-regexp (rx "kind: " (or "StatefulSet" "Deployment")) nil t)
     (search-forward "  annotations:" nil t)
-    (let ((annotate (format "    \"app.uw.systems/repos.%s\": \"%s\"" name url)))
+    (let* ((key (format "app.uw.systems/repos.%s" name))
+           (annotate (format "    \"%s\": \"%s\"" key url)))
+      (opslevel--clear-key key)
       (newline)
       (insert annotate))
     ))
+
+(defun opslevel--clear-key (key)
+  "if the given annotation KEY already exists then delete in current buffer."
+  (save-excursion
+    (if (search-forward key nil t)
+        (delete-line))))

@@ -8,14 +8,13 @@
       user-mail-address "mrpauffley@gmail.com")
 (setq auth-sources '("~/.authinfo.gpg"))
 
+(setq diary-file "~/org/diary"
+      org-agenda-diary-file 'diary-file
+      org-agenda-include-diary t
+      diary-show-holidays-flag nil)
+
 ;; force emacs to use it's own login for gpg
 (setenv "GPG_AGENT_INFO" nil)
-
-;; (use-package! 1password
-;;   :demand t
-;;   :init
-;;   (message "Enabling 1password ...")
-;;   :config)
 
 ;; turn off tabs
 (setq-default indent-tabs-mode nil)
@@ -47,18 +46,17 @@
 
 ;; Modeline settings
 (custom-set-faces!
-  '(mode-line :family "departure mono" :size 6 )
-  '(mode-line-inactive :family "departure mono" :size 6 ))
-(setq doom-font (font-spec :family "mononoki Nerd Font" :size 24 )
-      doom-variable-pitch-font (font-spec :family "mononoki Nerd Font" :size  24)
-      doom-big-font (font-spec :family "mononoki Nerd Font" :size 40))
+  '(mode-line :family "Departure Mono" :size 6 )
+  '(mode-line-inactive :family "Departure Mono" :size 6 ))
+(setq doom-font (font-spec :family "Mononoki Nerd Font Mono" :size 24 )
+      doom-variable-pitch-font (font-spec :family "Mononoki Nerd Font Mono" :size  24)
+      doom-big-font (font-spec :family "Mononoki Nerd Font Mono" :size 40))
 (setq doom-modeline-modal-icon t
       doom-modeline-hud t)
 
 ;; open weblinks in emacs
 (setq +lookup-open-url-fn #'eww)
 
-(set-docsets! 'haskell-mode "Haskell")
 (require 'lsp-mode)
 (use-package lsp-mode
   :ensure t
@@ -80,6 +78,9 @@
 (setq magit-repository-directories `(("~/code". 5)))
 (setq straight-vc-git-default-protocol "ssh")
 
+;; embark
+(global-set-key (kbd "C-e") #'embark-act)
+
 ;; PR-review
 (evil-ex-define-cmd "prr" #'pr-review)
 (evil-ex-define-cmd "prs" #'pr-review-search)
@@ -91,6 +92,36 @@
         ("is:pr archived:false assignee:@me is:open" . "Assigned")
         ("is:pr archived:false review-requested:@me is:open" . "Review requests")
         ("is:pr review-requested:@me is:open -author:app/dependabot" . "Review requests")))
+
+;; consult gh
+(require 'consult-gh-transient)
+(use-package consult-gh
+  :ensure t
+  :after embark-consult
+  :custom
+  (consult-gh-show-preview t) ;;show previews
+  (consult-gh-with-pr-review-mode +1) ;; work with pr-review
+  (consult-gh-preview-key "C-o") ;;show previews on demand by hitting "C-o"
+  (consult-gh-repo-preview-mode nil) ;;use the default README extension in preview
+  (consult-gh-repo-action #'consult-gh--repo-browse-files-action) ;;open file tree of repo on selection
+  (consult-gh-issue-action #'consult-gh--issue-view-action) ;;open issues in an emacs buffer
+  (consult-gh-pr-action #'consult-gh--pr-view-action) ;;open pull requests in an emacs buffer
+  (consult-gh-code-action #'consult-gh--code-view-action) ;;open files that contain code snippet in an emacs buffer
+  (consult-gh-file-action #'consult-gh--files-view-action) ;;open files in an emacs buffer
+
+  (consult-gh-notifications-action #'consult-gh--notifications-action) ;;open notifications using default actions for issue/pr
+  (consult-gh-dashboard-action #'consult-gh--dashboard-action) ;;open dashbaord items using default actions for issue/pr
+  (consult-gh-default-interactive-command #'consult-gh-transient)
+  :config
+  ;; optionally set favorite orgs
+  (setq consult-gh-favorite-orgs-list '("utilitywarehouse"))
+  )
+
+;;; enable embark actions
+(use-package consult-gh-embark
+  :config
+  (consult-gh-embark-mode +1))
+
 
 
 (setq forge-owned-accounts '(("oliverpauffley" nil)))
@@ -127,22 +158,34 @@
 
 ;; Haskell settings
 (after! haskell-mode
-  (setq haskell-stylish-on-save t
-        haskell-interactive-popup-errors nil)
-  )
+  (setq haskell-interactive-popup-errors nil
+        lsp-haskell-formatting-provider "fourmolu"
+        lsp-format-buffer-on-save t))
 
 ;; irc
-(set-irc-server! "irc.libera.chat"
-  '(:tls t
-    :port 6697
-    :nick "olliep"
-    :sasl-password my-nickserver-password
-    :sasl-password (auth-source-pick-first-password :host "Libera" :user "password")
-    :channels ("#haskell-beginners")))
+(after! circe
+  (defun fetch-password (&rest params)
+    (require 'auth-source)
+    (if-let* ((match (car (apply #'auth-source-search params)))
+              (secret (plist-get match :secret)))
+        (if (functionp secret)
+            (funcall secret)
+          secret)
+      (user-error "Password not found for %S" params)))
+
+  (set-irc-server! "irc.libera.chat"
+    '(:tls t
+      :port 6697
+      :nick "olliep"
+      :sasl-password
+      (lambda (server)
+        (fetch-password :user "olliep" :host "irc.libera.chat"))
+      :channels ("#haskell-beginners" "#haskell"))))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+(setq org-directory "~/org/"
+      org-refile-targets '((nil :maxlevel . 3) (org-agenda-files :maxlevel . 10)))
 
 
 (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
@@ -174,9 +217,6 @@
      ("n" "Personal notes" entry
       (file+headline +org-capture-notes-file "Inbox")
       "* %u %?\n%i\n%a" :prepend t)
-     ("W" "Wishlist" table-line
-      (file+headline "wishlist.org" "Wishlist")
-      "| %t | %? | %x |  |")
      ("j" "Journal" entry
       (file+olp+datetree +org-capture-journal-file)
       "* %U %?\n%i\n%a" :prepend t)
@@ -240,6 +280,11 @@
                "-auto-orient"))
 
 
+;; train my evil mode betterer
+(setq evil-motion-trainer-threshold 6
+      evil-snipe-scope 'buffer)
+(global-evil-motion-trainer-mode 1)
+
 ;; Smartparens bindings set to be called with SPC + l as prefix
 (map!
  :map smartparens-mode-map
@@ -265,6 +310,33 @@
        :desc "make" "m" '+make/run))
 
 (load! "./lisp/opslevel.el")
+(load! "./lisp/roman.el")
+(load! "./lisp/reorder.el")
+(load! "./lisp/swarm.el")
+
+
+(load-file (let ((coding-system-for-read 'utf-8))
+             (shell-command-to-string "agda-mode locate")))
+
+(setq mark-diary-entries-in-calendar t)
+(defun getcal (url)
+  "Download ics file and add to diary"
+  (let ((tmpfile (url-file-local-copy url)))
+    (icalendar-import-file tmpfile "~/diary" t)
+    (kill-buffer (car (last (split-string tmpfile "/"))))
+    )
+  )
+(setq google-calendars '(
+                         "https://calendar.google.com/calendar/ical/opauffley%40uw.co.uk/public/basic.ics"
+                         ))
+
+(defun getcals ()
+  (interactive)
+  (find-file "~/diary")
+  (flush-lines "^[& ]")
+  (dolist (url google-calendars) (getcal url))
+  (kill-buffer "diary"))
+
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one

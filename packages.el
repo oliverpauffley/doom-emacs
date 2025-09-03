@@ -52,7 +52,6 @@
 (package! go-impl)
 (package! uuidgen
   :recipe (:host github :repo "kanru/uuidgen-el"))
-(package! string-inflection)
 (package! mermaid-mode)
 (package! highlight)
 (package! graphql-mode)
@@ -76,6 +75,8 @@
 (package! org-dp
   :recipe (:host github :repo "tj64/org-dp"))
 (package! pr-review)
-
-;; temp fix 28-02-25
-(package! package-lint :pin "21edc6d0d0eadd2d0a537f422fb9b7b8a3ae6991")
+(package! structurizr-mode :recipe (:host github :repo "gilesp/structurizr-mode"))
+(package! consult-gh)
+(package! consult-gh-embark)
+(package! consult-gh-forge)
+(package! evil-motion-trainer :recipe (:host github :repo "martinbaillie/evil-motion-trainer"))
