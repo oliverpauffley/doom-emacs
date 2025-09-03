@@ -1,0 +1,29 @@
+# -*- mode: snippet -*-
+# name: Meatgrinder table
+# key: <meat
+# --
+|-------------------------+------------------|
+| Card                    | Encounter        |
+|-------------------------+------------------|
+| I - The Magician        | Torches Gutter   |
+| II - The High Priestess | Torches Gutter   |
+| III - The Lady          | Torches Gutter   |
+| IV - The Lord           | Torches Gutter   |
+| V - The Hierophant      | Torches Gutter   |
+| VI - The Lovers         | ${1:Curiosity}        |
+| VII - The Chariot       | ${2:Curiosity}        |
+| VIII - Strength         | ${Curiosity}        |
+| IX - The Hermit         | ${Curiosity}        |
+| X - Wheel of Fortune    | ${Curiosity}        |
+| XI - Justice            | ${Travel Event}     |
+| XII - The Hanged Man    | ${Travel Event}     |
+| XIII - Death            | ${Travel Event}     |
+| XIV - The Fferyllt      | ${Travel Event}     |
+| XV - The Cernunnos      | ${Travel Event}     |
+| XVI - The Tower         | ${Random Encounter} |
+| XVII - The Star         | ${Random Encounter} |
+| XVIII - The Moon        | ${Random Encounter} |
+| XIX - The Sun           | ${Random Encounter} |
+| XX - Judgement          | ${Random Encounter} |
+| XXI - The World         | ${Quest Rumor}      |
+|-------------------------+------------------
