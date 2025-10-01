@@ -14,7 +14,7 @@
       diary-show-holidays-flag nil)
 
 ;; force emacs to use it's own login for gpg
-(setenv "GPG_AGENT_INFO" nil)
+;;(setenv "GPG_AGENT_INFO" nil)
 
 ;; turn off tabs
 (setq-default indent-tabs-mode nil)
@@ -278,32 +278,25 @@
   (add-to-list 'image-dired-cmd-create-temp-image-options "-auto-orient")
   (add-to-list 'image-dired-cmd-create-standard-thumbnail-options
                "-auto-orient"))
+(dired-async-mode 1)
 
 
 ;; train my evil mode betterer
 (setq evil-motion-trainer-threshold 6
-      evil-snipe-scope 'buffer)
-(global-evil-motion-trainer-mode 1)
+      evil-snipe-scope 'buffer
+      )
 
-;; Smartparens bindings set to be called with SPC + l as prefix
-(map!
- :map smartparens-mode-map
- :leader (:prefix ("l" . "Lisps")
-          :nvie "f" #'sp-next-sexp
-          :nvie "b" #'sp-forward-barf-sexp
-          :nvim "u" #'sp-unwrap-sexp
-          :nie "k" #'sp-kill-sexp
-          :nie "s" #'sp-split-sexp
-          :nie "l" #'sp-forward-slurp-sexp
-          :nie "h" #'sp-backward-slurp-sexp
-          :nie "y" #'sp-copy-sexp
-          :nie "(" #'sp-wrap-round
-          :nie "[" #'sp-wrap-square
-          :nie "{" #'sp-wrap-curly))
+;; add to some major modes
+(add-hook 'go-mode-hook 'evil-motion-trainer-mode)
+(add-hook 'haskell-mode-hook 'evil-motion-trainer-mode)
+(add-hook 'yaml-mode-hook 'evil-motion-trainer-mode)
 
-(map! :leader
-      (:prefix "o"
-       :desc "kubed" "k" 'kubed-prefix-map))
+(use-package kele
+  :config
+  (kele-mode 1)
+  (bind-key (kbd "s-u") kele-command-map kele-mode-map)
+  )
+
 
 (map! :leader
       (:prefix "r"
@@ -315,8 +308,10 @@
 (load! "./lisp/swarm.el")
 
 
+;; agda
 (load-file (let ((coding-system-for-read 'utf-8))
              (shell-command-to-string "agda-mode locate")))
+
 
 (setq mark-diary-entries-in-calendar t)
 (defun getcal (url)
@@ -326,16 +321,15 @@
     (kill-buffer (car (last (split-string tmpfile "/"))))
     )
   )
-(setq google-calendars '(
-                         "https://calendar.google.com/calendar/ical/opauffley%40uw.co.uk/public/basic.ics"
-                         ))
 
-(defun getcals ()
-  (interactive)
-  (find-file "~/diary")
-  (flush-lines "^[& ]")
-  (dolist (url google-calendars) (getcal url))
-  (kill-buffer "diary"))
+(defun roll-dice (n size)
+  (interactive "nDice Num:
+nDice Size:
+")
+  (let ((sum 0))
+    (dotimes (i n)
+      (setq sum (+ sum (+ (random size) 1))))
+    (message "%dD%d: %d" n size sum)))
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;

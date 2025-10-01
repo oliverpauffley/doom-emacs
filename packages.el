@@ -70,8 +70,7 @@
 (package! ox-hugo)
 (package! gptel)
 (package! feature-mode)
-(package! kubed
-  :recipe (:host github :repo "eshelyaron/kubed"))
+(package! kele)
 (package! org-dp
   :recipe (:host github :repo "tj64/org-dp"))
 (package! pr-review)
