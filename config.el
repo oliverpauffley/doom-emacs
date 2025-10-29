@@ -13,8 +13,34 @@
       org-agenda-include-diary t
       diary-show-holidays-flag nil)
 
-;; force emacs to use it's own login for gpg
-;;(setenv "GPG_AGENT_INFO" nil)
+
+;; org linear
+(use-package! linear-emacs
+  :commands (linear-emacs-list-issues
+             linear-emacs-new-issue
+             linear-emacs-enable-org-sync)
+  :config
+  ;; Load API key from environment or auth-source
+  (setq linear-emacs-api-key (auth-source-pick-first-password :host "api.linear.app"))
+
+  ;; Optional: Set default team
+  (setq linear-emacs-default-team-id "CPQ")
+
+  ;; Optional: Customize org file location
+  (setq linear-emacs-org-file-path (expand-file-name "projects/linear.org" org-directory))
+
+  (setq linear-emacs-issues-state-mapping
+        '(("Backlog" . "BACKLOG")
+          ("Ready for Refinement". "REFINEMENT")
+          ("Refined". "REFINED")
+          ("Ready". "TODO")
+          ("Working" . "INPROGRESS")
+          ("Ready for Review" . "IN-REVIEW")
+          ("On Dev" . "ON-DEV")
+          ("Released" . "DONE")
+          ("Canceled" . "CANCELLED")
+          ))
+  )
 
 ;; turn off tabs
 (setq-default indent-tabs-mode nil)
@@ -42,7 +68,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-dracula)
+(setq doom-theme 'base16-everforest)
 
 ;; Modeline settings
 (custom-set-faces!
@@ -144,6 +170,9 @@
 (setq gofmt-command "goimports")
 (add-hook 'before-save-hook 'gofmt-before-save)
 
+;; Nix Settings
+(setq lsp-nix-nil-formatter ["nixfmt"])
+
 ;; Rust Settings
 (after! rustic
   (setq rustic-lsp-server 'rust-analyzer)
@@ -161,6 +190,7 @@
   (setq haskell-interactive-popup-errors nil
         lsp-haskell-formatting-provider "fourmolu"
         lsp-format-buffer-on-save t))
+(setq haskell-ts-format-command "fourmolu --stdin-input-file %s")
 
 ;; irc
 (after! circe
@@ -185,8 +215,9 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/"
-      org-refile-targets '((nil :maxlevel . 3) (org-agenda-files :maxlevel . 10)))
-
+      org-refile-targets '((nil :maxlevel . 3) (org-agenda-files :maxlevel . 10))
+      org-agenda-files '("~/org/")
+      )
 
 (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
 (setq rmh-elfeed-org-files ' ("./rss.org"))
@@ -205,7 +236,10 @@
 
   (setq
    ;; Org Capture
-   org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(i)" "BLOCKED(b)" "|" "DONE(d)" "CANCELLED(c)"))
+   org-todo-keywords
+   '((sequence "BACKLOG" "REFINEMENT" "REFINED")
+     (sequence "TODO(t)" "INPROGRESS(i)" "IN-REVIEW(r)")
+     (sequence "ON-DEV(o)" "|" "DONE(d)" "CANCELLED(c)"))
    org-capture-templates
    '(
      ("t" "Personal todo" entry
@@ -243,6 +277,9 @@
         org-src-strip-leading-and-trailing-blank-lines t
         org-src-preserve-indentation t ;; do not put two spaces on the left
         org-src-tab-acts-natively t)
+  (setq calendar-date-style 'european)
+  (setq org-contacts-files '("/home/ollie/org/contacts.org.gpg"))
+  (setq org-agenda-file-regexp "\\`[^.].*\\.org\\\(\\.gpg\\\)?\\'")
   (require 'ox-hugo)
   )
 
@@ -264,8 +301,6 @@
 (setq vterm-shell "fish")
 (setq explicit-shell-file-name "fish")
 
-;; Linear
-(setq linear-auth-token (auth-source-pick-first-password :host "api.linear.app"))
 
 ;; chat gpt
 (use-package! gptel
@@ -290,12 +325,6 @@
 (add-hook 'go-mode-hook 'evil-motion-trainer-mode)
 (add-hook 'haskell-mode-hook 'evil-motion-trainer-mode)
 (add-hook 'yaml-mode-hook 'evil-motion-trainer-mode)
-
-(use-package kele
-  :config
-  (kele-mode 1)
-  (bind-key (kbd "s-u") kele-command-map kele-mode-map)
-  )
 
 
 (map! :leader

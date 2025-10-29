@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: moq
+# uuid: moq-gen
+# key: moq
+# condition: t
+# --
+//go:generate moq -out ${1:file}_moq_test.go --pkg ${2:package}_test . ${3:Interface}

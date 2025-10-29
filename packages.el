@@ -62,7 +62,7 @@
 (package! org-drill)
 (package! csv-mode)
 (package! just-mode)
-;; a package to learn transient
+;;a package to learn transient
 (package! transient-showcase
   :recipe (:host github :repo "positron-solutions/transient-showcase"))
 (package! exercism
@@ -70,7 +70,6 @@
 (package! ox-hugo)
 (package! gptel)
 (package! feature-mode)
-(package! kele)
 (package! org-dp
   :recipe (:host github :repo "tj64/org-dp"))
 (package! pr-review)
@@ -79,3 +78,5 @@
 (package! consult-gh-embark)
 (package! consult-gh-forge)
 (package! evil-motion-trainer :recipe (:host github :repo "martinbaillie/evil-motion-trainer"))
+(package! linear-emacs
+  :recipe (:host github :repo "anegg0/linear-emacs" :files ("*.el")))

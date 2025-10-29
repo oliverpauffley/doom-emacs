@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: tRun
+# uuid: tRun
+# key: tRun
+# condition: t
+# --
+t.Run("${1:test-name}", func(t *testing.T) {
+    $0
+})
