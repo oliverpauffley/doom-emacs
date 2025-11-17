@@ -5,7 +5,10 @@
  ;; If there is more than one, they won't work right.
  '(calendar-date-style 'european)
  '(custom-safe-themes
-   '("9777774c632c27aafcd20e969626f87177e3d3ff526badd4bec90b33ed3ab73b"
+   '("b0269d21bf4b2728f89a373966bec0805e2f1adf47b2266702210c785610e18d"
+     "aec7b55f2a13307a55517fdf08438863d694550565dee23181d2ebd973ebd6b8"
+     "b9761a2e568bee658e0ff723dd620d844172943eb5ec4053e2b199c59e0bcc22"
+     "9777774c632c27aafcd20e969626f87177e3d3ff526badd4bec90b33ed3ab73b"
      "7771c8496c10162220af0ca7b7e61459cb42d18c35ce272a63461c0fc1336015"
      "a6920ee8b55c441ada9a19a44e9048be3bfb1338d06fc41bce3819ac22e4b5a1"
      "4aee0a939c49baa99948d9f685c134a274f3e6a46e23b76fe30dc0ddc9b0748c"
@@ -39,7 +42,8 @@
      "4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
      "7964b513f8a2bb14803e717e0ac0123f100fb92160dcf4a467f530868ebaae3e" default))
  '(safe-local-variable-values
-   '((haskell-process-args-ghci "ghci") (haskell-process-path-ghci . "stack")
+   '((eval progn (require 'rpgdm-ironsworn) (rpgdm-mode))
+     (haskell-process-args-ghci "ghci") (haskell-process-path-ghci . "stack")
      (haskell-process-type . ghci) (haskell-indent-spaces . 4)
      (haskell-process-type . stack-ghci) (haskell-process-type quote stack-ghci)))
  '(send-mail-function 'smtpmail-send-it))

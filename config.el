@@ -6,7 +6,11 @@
 ;; clients, file templates and snippets.
 (setq user-full-name "Oliver Pauffley"
       user-mail-address "mrpauffley@gmail.com")
-(setq auth-sources '("~/.authinfo.gpg"))
+(setq auth-sources '("~/.authinfo.gpg")
+      auth-source-do-cache nil)
+
+(setopt use-short-answers t)
+(setq reb-re-syntax 'rx)
 
 (setq diary-file "~/org/diary"
       org-agenda-diary-file 'diary-file
@@ -19,12 +23,33 @@
   :commands (linear-emacs-list-issues
              linear-emacs-new-issue
              linear-emacs-enable-org-sync)
+
   :config
   ;; Load API key from environment or auth-source
   (setq linear-emacs-api-key (auth-source-pick-first-password :host "api.linear.app"))
 
+  ;; Auto-enable sync when linear.org is opened
+  (defun my/enable-linear-org-sync ()
+    "Enable Linear-org synchronization when linear.org is opened."
+    (when (and buffer-file-name
+               (string-match-p "linear\\.org$" buffer-file-name))
+      (linear-emacs-enable-org-sync)
+      (message "Linear-org synchronization enabled for this buffer")))
+
+  (add-hook 'find-file-hook #'my/enable-linear-org-sync)
+
   ;; Optional: Set default team
-  (setq linear-emacs-default-team-id "CPQ")
+  (setq linear-emacs-default-team-id "a7a9f64e-6ce4-4d9b-b98f-a8a867017048")
+  ;; Keybindings
+  (map! :leader
+        (:prefix ("l" . "linear")
+         :desc "List Linear issues" "l" #'linear-emacs-list-issues
+         :desc "Create new issue" "n" #'linear-emacs-new-issue
+         :desc "Sync current issue" "s" #'linear-emacs-sync-org-to-linear
+         :desc "Enable org sync" "e" #'linear-emacs-enable-org-sync
+         :desc "Disable org sync" "d" #'linear-emacs-disable-org-sync
+         :desc "Test connection" "t" #'linear-emacs-test-connection
+         :desc "Toggle debug mode" "D" #'linear-emacs-toggle-debug))
 
   ;; Optional: Customize org file location
   (setq linear-emacs-org-file-path (expand-file-name "projects/linear.org" org-directory))
@@ -41,6 +66,12 @@
           ("Canceled" . "CANCELLED")
           ))
   )
+
+
+
+
+
+
 
 ;; turn off tabs
 (setq-default indent-tabs-mode nil)
@@ -68,20 +99,23 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'base16-everforest)
+(setq doom-theme 'modus-vivendi-tinted)
+(setq modus-themes-italic-constructs t
+      modus-themes-bold-constructs t
+      modus-themes-variable-pitch-ui t
+      modus-themes-mixed-fonts t)
+
 
 ;; Modeline settings
 (custom-set-faces!
-  '(mode-line :family "Departure Mono" :size 6 )
-  '(mode-line-inactive :family "Departure Mono" :size 6 ))
+  '(mode-line :family "DepartureMono Nerd Font" :size 6 )
+  '(mode-line-inactive :family "DepartureMono Nerd Font" :size 6 ))
+
 (setq doom-font (font-spec :family "Mononoki Nerd Font Mono" :size 24 )
       doom-variable-pitch-font (font-spec :family "Mononoki Nerd Font Mono" :size  24)
       doom-big-font (font-spec :family "Mononoki Nerd Font Mono" :size 40))
 (setq doom-modeline-modal-icon t
       doom-modeline-hud t)
-
-;; open weblinks in emacs
-(setq +lookup-open-url-fn #'eww)
 
 (require 'lsp-mode)
 (use-package lsp-mode
@@ -90,7 +124,6 @@
   :commands (lsp lsp-deferred))
 
 (add-load-path! "lisp")
-(autoload 'refill-mode "refill" "Refill minor mode." t)
 
 ;; Projectile
 (after! projectile
@@ -116,8 +149,8 @@
 (setq pr-review-search-predefined-queries
       '(("is:pr archived:false author:@me is:open" . "Created")
         ("is:pr archived:false assignee:@me is:open" . "Assigned")
-        ("is:pr archived:false review-requested:@me is:open" . "Review requests")
-        ("is:pr review-requested:@me is:open -author:app/dependabot" . "Review requests")))
+        ("is:pr review-requested:@me is:open" . "Review requests")
+        ("is:pr review-requested:@me is:open  -author:app/dependabot -author:stepsecurity-app[bot]" . "Review requests - no bots")))
 
 ;; consult gh
 (require 'consult-gh-transient)
@@ -149,7 +182,6 @@
   (consult-gh-embark-mode +1))
 
 
-
 (setq forge-owned-accounts '(("oliverpauffley" nil)))
 (add-hook 'code-review-mode-hook
           (lambda ()
@@ -160,7 +192,6 @@
 ;; Exercism
 (require 'exercism)
 (setq exercism-display-tests-after-run 't)
-
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -214,10 +245,14 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/"
+(setq org-directory "~/org"
       org-refile-targets '((nil :maxlevel . 3) (org-agenda-files :maxlevel . 10))
-      org-agenda-files '("~/org/")
-      )
+      org-agenda-files (list
+                        "~/org/todo.org"
+                        "~/org/work/todo.org"
+                        "~/org/programming/todo.org"
+                        "~/org/rpgs/todo.org"
+                        ))
 
 (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
 (setq rmh-elfeed-org-files ' ("./rss.org"))
@@ -237,9 +272,7 @@
   (setq
    ;; Org Capture
    org-todo-keywords
-   '((sequence "BACKLOG" "REFINEMENT" "REFINED")
-     (sequence "TODO(t)" "INPROGRESS(i)" "IN-REVIEW(r)")
-     (sequence "ON-DEV(o)" "|" "DONE(d)" "CANCELLED(c)"))
+   '((sequence "BACKLOG" "REFINEMENT" "REFINED" "TODO(t)" "INPROGRESS(i)" "IN-REVIEW(r)" "ON-DEV(o)" "|" "DONE(d)" "CANCELLED(c)"))
    org-capture-templates
    '(
      ("t" "Personal todo" entry
@@ -298,23 +331,11 @@
 (setq message-send-mail-function 'smtpmail-send-it)
 
 ;; set shell
-(setq vterm-shell "fish")
-(setq explicit-shell-file-name "fish")
-
-
-;; chat gpt
-(use-package! gptel
-  :config
-  (setq! gptel-api-key (auth-source-pick-first-password :host "api.openai.com")))
-
-;; show images in the correct orientations
-(with-eval-after-load 'image-dired
-  (add-to-list 'image-dired-cmd-create-thumbnail-options "-auto-orient")
-  (add-to-list 'image-dired-cmd-create-temp-image-options "-auto-orient")
-  (add-to-list 'image-dired-cmd-create-standard-thumbnail-options
-               "-auto-orient"))
-(dired-async-mode 1)
-
+(map! :leader
+      (:prefix "o"
+       :desc "eshell popup" "t" 'eshell)
+      (:prefix "o"
+       :desc "eshell fullscreen" "T" '+eshell/frame))
 
 ;; train my evil mode betterer
 (setq evil-motion-trainer-threshold 6
@@ -326,16 +347,7 @@
 (add-hook 'haskell-mode-hook 'evil-motion-trainer-mode)
 (add-hook 'yaml-mode-hook 'evil-motion-trainer-mode)
 
-
-(map! :leader
-      (:prefix "r"
-       :desc "make" "m" '+make/run))
-
-(load! "./lisp/opslevel.el")
-(load! "./lisp/roman.el")
-(load! "./lisp/reorder.el")
 (load! "./lisp/swarm.el")
-
 
 ;; agda
 (load-file (let ((coding-system-for-read 'utf-8))
@@ -360,18 +372,16 @@ nDice Size:
       (setq sum (+ sum (+ (random size) 1))))
     (message "%dD%d: %d" n size sum)))
 
-;; Here are some additional functions/macros that could help you configure Doom:
-;;
-;; - `load!' for loading external *.el files relative to this one
-;; - `use-package!' for configuring packages
-;; - `after!' for running code after a package has loaded
-;; - `add-load-path!' for adding directories to the `load-path', relative to
-;;   this file. Emacs searches the `load-path' when you load packages with
-;;   `require' or `use-package'.
-;; - `map!' for binding new keys
-;;
-;; To get information about any of these functions/macros, move the cursor over
-;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
-;; This will open documentation for it, including demos of how they are used.
-;;
-;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
+;; screencast
+(with-eval-after-load 'gif-screencast
+  (define-key gif-screencast-mode-map (kbd "<f8>") 'gif-screencast-toggle-pause)
+  (define-key gif-screencast-mode-map (kbd "<f9>") 'gif-screencast-stop))
+
+;; ironsworn
+(use-package! rpgdm-ironsworn
+  :init
+  (setq rpgdm-ironsworn-project (expand-file-name "~/.config/emacs/.local/straight/repos/emacs-ironsworn"))
+  (global-set-key (kbd "<f6>") 'hydra-rpgdm/body)
+  (setq org-link-elisp-skip-confirm-regexp (rx string-start (optional "(") "rpgdm-"
+                                               (or "tables-" "ironsworn-")
+                                               (one-or-more any))))

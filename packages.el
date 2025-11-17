@@ -67,7 +67,6 @@
   :recipe (:host github :repo "positron-solutions/transient-showcase"))
 (package! exercism
   :recipe (:host github :repo "anonimitoraf/exercism.el" :files ("exercism.el")))
-(package! ox-hugo)
 (package! gptel)
 (package! feature-mode)
 (package! org-dp
@@ -80,3 +79,15 @@
 (package! evil-motion-trainer :recipe (:host github :repo "martinbaillie/evil-motion-trainer"))
 (package! linear-emacs
   :recipe (:host github :repo "anegg0/linear-emacs" :files ("*.el")))
+;; Play ironsworn in emacs
+(package! emacs-rpgdm
+  :recipe (:host gitlab :repo "howardabrams/emacs-rpgdm"))
+(package! emacs-ironsworn
+  :recipe (:host gitlab :repo "oliverpauffley/emacs-ironsworn" :branch "fix/org-entry-properties"))
+
+;; record screencasts
+(package! emacs-gif-screencast
+  :recipe (:host gitlab :repo "ambrevar/emacs-gif-screencast"))
+;; My packages
+(package! vaarn
+  :recipe (:host github :repo "oliverpauffley/vaarn.el"))
