@@ -116,6 +116,8 @@
       doom-big-font (font-spec :family "Mononoki Nerd Font Mono" :size 40))
 (setq doom-modeline-modal-icon t
       doom-modeline-hud t)
+(map! :leader (:desc "+Font" "+" 'text-scale-increase))
+(map! :leader (:desc "-Font" "-" 'text-scale-decrease))
 
 (require 'lsp-mode)
 (use-package lsp-mode
@@ -220,7 +222,8 @@
 (after! haskell-mode
   (setq haskell-interactive-popup-errors nil
         lsp-haskell-formatting-provider "fourmolu"
-        lsp-format-buffer-on-save t))
+        lsp-format-buffer-on-save t
+        haskell-process-show-debug-tips nil))
 (setq haskell-ts-format-command "fourmolu --stdin-input-file %s")
 
 ;; irc
@@ -252,6 +255,8 @@
                         "~/org/work/todo.org"
                         "~/org/programming/todo.org"
                         "~/org/rpgs/todo.org"
+                        "~/org/diary"
+                        "~/org/contacts.org.gpg"
                         ))
 
 (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
